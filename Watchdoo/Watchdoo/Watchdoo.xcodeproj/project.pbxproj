@@ -1,0 +1,1005 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		95E345462FA60FC600F709F1 /* Watchdoo Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 95E345452FA60FC600F709F1 /* Watchdoo Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		95E345302FA60FC600F709F1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 95E3451A2FA60FC500F709F1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 95E345212FA60FC500F709F1;
+			remoteInfo = Watchdoo;
+		};
+		95E3453A2FA60FC600F709F1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 95E3451A2FA60FC500F709F1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 95E345212FA60FC500F709F1;
+			remoteInfo = Watchdoo;
+		};
+		95E345472FA60FC600F709F1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 95E3451A2FA60FC500F709F1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 95E345442FA60FC600F709F1;
+			remoteInfo = "Watchdoo Watch App";
+		};
+		95E345552FA60FC600F709F1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 95E3451A2FA60FC500F709F1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 95E345442FA60FC600F709F1;
+			remoteInfo = "Watchdoo Watch App";
+		};
+		95E3455F2FA60FC600F709F1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 95E3451A2FA60FC500F709F1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 95E345442FA60FC600F709F1;
+			remoteInfo = "Watchdoo Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		95E3456B2FA60FC600F709F1 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				95E345462FA60FC600F709F1 /* Watchdoo Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		95E345222FA60FC500F709F1 /* Watchdoo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Watchdoo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		95E3452F2FA60FC600F709F1 /* WatchdooTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WatchdooTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		95E345392FA60FC600F709F1 /* WatchdooUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WatchdooUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		95E345452FA60FC600F709F1 /* Watchdoo Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Watchdoo Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		95E345542FA60FC600F709F1 /* Watchdoo Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Watchdoo Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		95E3455E2FA60FC600F709F1 /* Watchdoo Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Watchdoo Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		95E345242FA60FC500F709F1 /* Watchdoo */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Watchdoo;
+			sourceTree = "<group>";
+		};
+		95E345322FA60FC600F709F1 /* WatchdooTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = WatchdooTests;
+			sourceTree = "<group>";
+		};
+		95E3453C2FA60FC600F709F1 /* WatchdooUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = WatchdooUITests;
+			sourceTree = "<group>";
+		};
+		95E345492FA60FC600F709F1 /* Watchdoo Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Watchdoo Watch App";
+			sourceTree = "<group>";
+		};
+		95E345572FA60FC600F709F1 /* Watchdoo Watch AppTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Watchdoo Watch AppTests";
+			sourceTree = "<group>";
+		};
+		95E345612FA60FC600F709F1 /* Watchdoo Watch AppUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Watchdoo Watch AppUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		95E3451F2FA60FC500F709F1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95E3452C2FA60FC600F709F1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95E345362FA60FC600F709F1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95E345422FA60FC600F709F1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95E345512FA60FC600F709F1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95E3455B2FA60FC600F709F1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		95E345192FA60FC500F709F1 = {
+			isa = PBXGroup;
+			children = (
+				95E345242FA60FC500F709F1 /* Watchdoo */,
+				95E345322FA60FC600F709F1 /* WatchdooTests */,
+				95E3453C2FA60FC600F709F1 /* WatchdooUITests */,
+				95E345492FA60FC600F709F1 /* Watchdoo Watch App */,
+				95E345572FA60FC600F709F1 /* Watchdoo Watch AppTests */,
+				95E345612FA60FC600F709F1 /* Watchdoo Watch AppUITests */,
+				95E345232FA60FC500F709F1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		95E345232FA60FC500F709F1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				95E345222FA60FC500F709F1 /* Watchdoo.app */,
+				95E3452F2FA60FC600F709F1 /* WatchdooTests.xctest */,
+				95E345392FA60FC600F709F1 /* WatchdooUITests.xctest */,
+				95E345452FA60FC600F709F1 /* Watchdoo Watch App.app */,
+				95E345542FA60FC600F709F1 /* Watchdoo Watch AppTests.xctest */,
+				95E3455E2FA60FC600F709F1 /* Watchdoo Watch AppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		95E345212FA60FC500F709F1 /* Watchdoo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 95E3456C2FA60FC600F709F1 /* Build configuration list for PBXNativeTarget "Watchdoo" */;
+			buildPhases = (
+				95E3451E2FA60FC500F709F1 /* Sources */,
+				95E3451F2FA60FC500F709F1 /* Frameworks */,
+				95E345202FA60FC500F709F1 /* Resources */,
+				95E3456B2FA60FC600F709F1 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				95E345482FA60FC600F709F1 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				95E345242FA60FC500F709F1 /* Watchdoo */,
+			);
+			name = Watchdoo;
+			packageProductDependencies = (
+			);
+			productName = Watchdoo;
+			productReference = 95E345222FA60FC500F709F1 /* Watchdoo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		95E3452E2FA60FC600F709F1 /* WatchdooTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 95E3456F2FA60FC600F709F1 /* Build configuration list for PBXNativeTarget "WatchdooTests" */;
+			buildPhases = (
+				95E3452B2FA60FC600F709F1 /* Sources */,
+				95E3452C2FA60FC600F709F1 /* Frameworks */,
+				95E3452D2FA60FC600F709F1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				95E345312FA60FC600F709F1 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				95E345322FA60FC600F709F1 /* WatchdooTests */,
+			);
+			name = WatchdooTests;
+			packageProductDependencies = (
+			);
+			productName = WatchdooTests;
+			productReference = 95E3452F2FA60FC600F709F1 /* WatchdooTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		95E345382FA60FC600F709F1 /* WatchdooUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 95E345722FA60FC600F709F1 /* Build configuration list for PBXNativeTarget "WatchdooUITests" */;
+			buildPhases = (
+				95E345352FA60FC600F709F1 /* Sources */,
+				95E345362FA60FC600F709F1 /* Frameworks */,
+				95E345372FA60FC600F709F1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				95E3453B2FA60FC600F709F1 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				95E3453C2FA60FC600F709F1 /* WatchdooUITests */,
+			);
+			name = WatchdooUITests;
+			packageProductDependencies = (
+			);
+			productName = WatchdooUITests;
+			productReference = 95E345392FA60FC600F709F1 /* WatchdooUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		95E345442FA60FC600F709F1 /* Watchdoo Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 95E345682FA60FC600F709F1 /* Build configuration list for PBXNativeTarget "Watchdoo Watch App" */;
+			buildPhases = (
+				95E345412FA60FC600F709F1 /* Sources */,
+				95E345422FA60FC600F709F1 /* Frameworks */,
+				95E345432FA60FC600F709F1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				95E345492FA60FC600F709F1 /* Watchdoo Watch App */,
+			);
+			name = "Watchdoo Watch App";
+			packageProductDependencies = (
+			);
+			productName = "Watchdoo Watch App";
+			productReference = 95E345452FA60FC600F709F1 /* Watchdoo Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		95E345532FA60FC600F709F1 /* Watchdoo Watch AppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 95E345752FA60FC600F709F1 /* Build configuration list for PBXNativeTarget "Watchdoo Watch AppTests" */;
+			buildPhases = (
+				95E345502FA60FC600F709F1 /* Sources */,
+				95E345512FA60FC600F709F1 /* Frameworks */,
+				95E345522FA60FC600F709F1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				95E345562FA60FC600F709F1 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				95E345572FA60FC600F709F1 /* Watchdoo Watch AppTests */,
+			);
+			name = "Watchdoo Watch AppTests";
+			packageProductDependencies = (
+			);
+			productName = "Watchdoo Watch AppTests";
+			productReference = 95E345542FA60FC600F709F1 /* Watchdoo Watch AppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		95E3455D2FA60FC600F709F1 /* Watchdoo Watch AppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 95E345782FA60FC600F709F1 /* Build configuration list for PBXNativeTarget "Watchdoo Watch AppUITests" */;
+			buildPhases = (
+				95E3455A2FA60FC600F709F1 /* Sources */,
+				95E3455B2FA60FC600F709F1 /* Frameworks */,
+				95E3455C2FA60FC600F709F1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				95E345602FA60FC600F709F1 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				95E345612FA60FC600F709F1 /* Watchdoo Watch AppUITests */,
+			);
+			name = "Watchdoo Watch AppUITests";
+			packageProductDependencies = (
+			);
+			productName = "Watchdoo Watch AppUITests";
+			productReference = 95E3455E2FA60FC600F709F1 /* Watchdoo Watch AppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		95E3451A2FA60FC500F709F1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2640;
+				LastUpgradeCheck = 2640;
+				TargetAttributes = {
+					95E345212FA60FC500F709F1 = {
+						CreatedOnToolsVersion = 26.4.1;
+					};
+					95E3452E2FA60FC600F709F1 = {
+						CreatedOnToolsVersion = 26.4.1;
+						TestTargetID = 95E345212FA60FC500F709F1;
+					};
+					95E345382FA60FC600F709F1 = {
+						CreatedOnToolsVersion = 26.4.1;
+						TestTargetID = 95E345212FA60FC500F709F1;
+					};
+					95E345442FA60FC600F709F1 = {
+						CreatedOnToolsVersion = 26.4.1;
+					};
+					95E345532FA60FC600F709F1 = {
+						CreatedOnToolsVersion = 26.4.1;
+						TestTargetID = 95E345442FA60FC600F709F1;
+					};
+					95E3455D2FA60FC600F709F1 = {
+						CreatedOnToolsVersion = 26.4.1;
+						TestTargetID = 95E345442FA60FC600F709F1;
+					};
+				};
+			};
+			buildConfigurationList = 95E3451D2FA60FC500F709F1 /* Build configuration list for PBXProject "Watchdoo" */;
+			developmentRegion = de;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				de,
+			);
+			mainGroup = 95E345192FA60FC500F709F1;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 95E345232FA60FC500F709F1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				95E345212FA60FC500F709F1 /* Watchdoo */,
+				95E3452E2FA60FC600F709F1 /* WatchdooTests */,
+				95E345382FA60FC600F709F1 /* WatchdooUITests */,
+				95E345442FA60FC600F709F1 /* Watchdoo Watch App */,
+				95E345532FA60FC600F709F1 /* Watchdoo Watch AppTests */,
+				95E3455D2FA60FC600F709F1 /* Watchdoo Watch AppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		95E345202FA60FC500F709F1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95E3452D2FA60FC600F709F1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95E345372FA60FC600F709F1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95E345432FA60FC600F709F1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95E345522FA60FC600F709F1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95E3455C2FA60FC600F709F1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		95E3451E2FA60FC500F709F1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95E3452B2FA60FC600F709F1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95E345352FA60FC600F709F1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95E345412FA60FC600F709F1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95E345502FA60FC600F709F1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95E3455A2FA60FC600F709F1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		95E345312FA60FC600F709F1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 95E345212FA60FC500F709F1 /* Watchdoo */;
+			targetProxy = 95E345302FA60FC600F709F1 /* PBXContainerItemProxy */;
+		};
+		95E3453B2FA60FC600F709F1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 95E345212FA60FC500F709F1 /* Watchdoo */;
+			targetProxy = 95E3453A2FA60FC600F709F1 /* PBXContainerItemProxy */;
+		};
+		95E345482FA60FC600F709F1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 95E345442FA60FC600F709F1 /* Watchdoo Watch App */;
+			targetProxy = 95E345472FA60FC600F709F1 /* PBXContainerItemProxy */;
+		};
+		95E345562FA60FC600F709F1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 95E345442FA60FC600F709F1 /* Watchdoo Watch App */;
+			targetProxy = 95E345552FA60FC600F709F1 /* PBXContainerItemProxy */;
+		};
+		95E345602FA60FC600F709F1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 95E345442FA60FC600F709F1 /* Watchdoo Watch App */;
+			targetProxy = 95E3455F2FA60FC600F709F1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		95E345662FA60FC600F709F1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		95E345672FA60FC600F709F1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		95E345692FA60FC600F709F1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Watchdoo;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.example.Watchdoo;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Watchdoo.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.4;
+			};
+			name = Debug;
+		};
+		95E3456A2FA60FC600F709F1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Watchdoo;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.example.Watchdoo;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Watchdoo.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.4;
+			};
+			name = Release;
+		};
+		95E3456D2FA60FC600F709F1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Watchdoo;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Watchdoo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		95E3456E2FA60FC600F709F1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Watchdoo;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Watchdoo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		95E345702FA60FC600F709F1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.WatchdooTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Watchdoo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Watchdoo";
+			};
+			name = Debug;
+		};
+		95E345712FA60FC600F709F1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.WatchdooTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Watchdoo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Watchdoo";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		95E345732FA60FC600F709F1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.WatchdooUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Watchdoo;
+			};
+			name = Debug;
+		};
+		95E345742FA60FC600F709F1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.WatchdooUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Watchdoo;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		95E345762FA60FC600F709F1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.Watchdoo-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Watchdoo Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Watchdoo Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 26.4;
+			};
+			name = Debug;
+		};
+		95E345772FA60FC600F709F1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.Watchdoo-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Watchdoo Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Watchdoo Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.4;
+			};
+			name = Release;
+		};
+		95E345792FA60FC600F709F1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.Watchdoo-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "Watchdoo Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 26.4;
+			};
+			name = Debug;
+		};
+		95E3457A2FA60FC600F709F1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.Watchdoo-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "Watchdoo Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.4;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		95E3451D2FA60FC500F709F1 /* Build configuration list for PBXProject "Watchdoo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				95E345662FA60FC600F709F1 /* Debug */,
+				95E345672FA60FC600F709F1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		95E345682FA60FC600F709F1 /* Build configuration list for PBXNativeTarget "Watchdoo Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				95E345692FA60FC600F709F1 /* Debug */,
+				95E3456A2FA60FC600F709F1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		95E3456C2FA60FC600F709F1 /* Build configuration list for PBXNativeTarget "Watchdoo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				95E3456D2FA60FC600F709F1 /* Debug */,
+				95E3456E2FA60FC600F709F1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		95E3456F2FA60FC600F709F1 /* Build configuration list for PBXNativeTarget "WatchdooTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				95E345702FA60FC600F709F1 /* Debug */,
+				95E345712FA60FC600F709F1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		95E345722FA60FC600F709F1 /* Build configuration list for PBXNativeTarget "WatchdooUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				95E345732FA60FC600F709F1 /* Debug */,
+				95E345742FA60FC600F709F1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		95E345752FA60FC600F709F1 /* Build configuration list for PBXNativeTarget "Watchdoo Watch AppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				95E345762FA60FC600F709F1 /* Debug */,
+				95E345772FA60FC600F709F1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		95E345782FA60FC600F709F1 /* Build configuration list for PBXNativeTarget "Watchdoo Watch AppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				95E345792FA60FC600F709F1 /* Debug */,
+				95E3457A2FA60FC600F709F1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 95E3451A2FA60FC500F709F1 /* Project object */;
+}
