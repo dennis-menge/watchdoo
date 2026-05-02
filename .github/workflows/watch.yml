@@ -13,7 +13,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-15
+    runs-on: macos-latest
 
     strategy:
       fail-fast: false
@@ -25,8 +25,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.app
+      - name: Show Xcode and SDKs
+        run: |
+          xcodebuild -version
+          xcrun simctl list runtimes | head -20
 
       - name: Build ${{ matrix.target.scheme }}
         working-directory: Watchdoo/Watchdoo
