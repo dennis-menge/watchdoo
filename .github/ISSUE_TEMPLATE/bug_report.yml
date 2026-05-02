@@ -1,0 +1,83 @@
+name: 🐛 Bug Report
+description: Report a problem with the Watch app, companion app, or backend
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report! Please fill out the sections below to help us reproduce the issue.
+
+        ⚠️ **Do not include credentials, API keys, or personal data** in screenshots, logs, or descriptions.
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Which component is affected?
+      options:
+        - Watch App (watchOS)
+        - Companion App (iOS)
+        - Backend (FastAPI)
+        - Build / Setup
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug.
+      placeholder: When I tap on a recipe ingredient, the app crashes...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open the Watch app
+        2. Switch to "Gerichte" view
+        3. Tap on the first ingredient
+        4. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen instead?
+    validations:
+      required: true
+
+  - type: input
+    id: watch-os
+    attributes:
+      label: watchOS version
+      placeholder: "e.g. 11.2"
+
+  - type: input
+    id: ios
+    attributes:
+      label: iOS version
+      placeholder: "e.g. 18.2"
+
+  - type: input
+    id: xcode
+    attributes:
+      label: Xcode version (if building from source)
+      placeholder: "e.g. 16.2"
+
+  - type: input
+    id: backend
+    attributes:
+      label: Backend deployment
+      placeholder: "Azure Container Apps / local Docker / other"
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: Backend logs, Xcode console output, etc. Redact any credentials.
+      render: shell
