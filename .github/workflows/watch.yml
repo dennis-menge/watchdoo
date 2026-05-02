@@ -1,0 +1,43 @@
+name: Watch & iOS Build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Watchdoo/**'
+      - '.github/workflows/watch.yml'
+  pull_request:
+    paths:
+      - 'Watchdoo/**'
+      - '.github/workflows/watch.yml'
+
+jobs:
+  build:
+    runs-on: macos-15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - { scheme: 'Watchdoo Watch App', destination: 'generic/platform=watchOS Simulator' }
+          - { scheme: 'Watchdoo',           destination: 'generic/platform=iOS Simulator'     }
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.app
+
+      - name: Build ${{ matrix.target.scheme }}
+        working-directory: Watchdoo/Watchdoo
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project Watchdoo.xcodeproj \
+            -scheme "${{ matrix.target.scheme }}" \
+            -destination '${{ matrix.target.destination }}' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            build | xcbeautify --renderer github-actions
+        env:
+          NSUnbufferedIO: YES

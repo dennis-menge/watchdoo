@@ -1,0 +1,199 @@
+{
+  "sourceLanguage" : "de",
+  "strings" : {
+    "⚙️ Setup" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚙️ Setup"
+          }
+        }
+      }
+    },
+    "An Watch senden" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send to Watch"
+          }
+        }
+      }
+    },
+    "API-Key" : {
+      "shouldTranslate" : false
+    },
+    "API-Key generieren:" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Generate API Key:"
+          }
+        }
+      }
+    },
+    "Aus Clipboard einfügen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paste from Clipboard"
+          }
+        }
+      }
+    },
+    "Backend-Setup Anleitung" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backend Setup Guide"
+          }
+        }
+      }
+    },
+    "Cookidoo Watch App nicht installiert" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookidoo Watch App not installed"
+          }
+        }
+      }
+    },
+    "Watchdoo App nicht installiert" : {
+
+    },
+    "Watchdoo Setup" : {
+      "shouldTranslate" : false
+    },
+    "Erfolgreich an Watch gesendet!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Successfully sent to Watch!"
+          }
+        }
+      }
+    },
+    "Hilfe" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Help"
+          }
+        }
+      }
+    },
+    "Keine Apple Watch gekoppelt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Apple Watch paired"
+          }
+        }
+      }
+    },
+    "Konfiguriere dein Backend und sende die Einstellungen an deine Apple Watch." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configure your backend and send the settings to your Apple Watch."
+          }
+        }
+      }
+    },
+    "openssl rand -hex 32" : {
+
+    },
+    "Sende..." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sending..."
+          }
+        }
+      }
+    },
+    "Server testen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test server"
+          }
+        }
+      }
+    },
+    "Server-Konfiguration" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server Configuration"
+          }
+        }
+      }
+    },
+    "Server-URL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server URL"
+          }
+        }
+      }
+    },
+    "Verbindung erfolgreich" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connection successful"
+          }
+        }
+      }
+    },
+    "Verbindung fehlgeschlagen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connection failed"
+          }
+        }
+      }
+    },
+    "Verbindung testen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test connection"
+          }
+        }
+      }
+    },
+    "Watch-Verbindung nicht aktiv" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Watch connection not active"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
