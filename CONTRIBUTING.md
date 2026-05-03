@@ -59,3 +59,31 @@ pytest
 ## Code of Conduct
 
 Be kind. Assume good faith.
+
+## Dependency hygiene
+
+Watchdoo automates routine dependency maintenance:
+
+- **Dependabot** (`.github/dependabot.yml`) opens weekly PRs for
+  - Python deps in `backend/requirements.txt` (grouped minor + patch)
+  - Docker base image in `backend/Dockerfile`
+  - GitHub Actions versions used in workflows
+- **CodeQL** (`.github/workflows/codeql.yml`) scans Python and Swift on
+  every push/PR plus a weekly cron, with the `security-and-quality`
+  query suite. Findings show up under the repo's *Security → Code scanning*.
+- **Trivy** scans the built backend container image on every backend CI
+  run and uploads SARIF results to *Security → Code scanning* under
+  category `trivy-image`. Only fixable HIGH/CRITICAL findings are
+  reported to keep the noise down.
+- **Scheduled rebuild**: the backend workflow runs Mondays 04:00 UTC
+  even without code changes so base-image security patches flow through
+  without manual action.
+
+If you intentionally need to pin a vulnerable version (e.g. waiting for
+an upstream fix), document the reason in the PR/commit and revisit when
+a patched release ships.
+
+The Watch and iOS apps currently have **no third-party Swift packages**;
+their only "dependency" is the Apple SDK / Xcode toolchain, which is
+managed by upgrading Xcode locally and updating the deployment targets
+in `Watchdoo.xcodeproj` deliberately.
