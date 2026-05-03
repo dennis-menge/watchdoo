@@ -1,6 +1,8 @@
-# 🍪 Watchdoo
-
-> Your Cookidoo shopping list on the Apple Watch.
+<div align="center">
+  <img src="docs/logo.png" alt="Watchdoo logo" width="160" />
+  <h1>Watchdoo</h1>
+  <p><strong>Your Cookidoo shopping list on the Apple Watch.</strong></p>
+</div>
 
 A standalone watchOS app that accesses the shopping list from the Cookidoo app (Thermomix/Vorwerk) through a self-hosted backend. UI languages: 🇩🇪 German, 🇬🇧 English.
 
