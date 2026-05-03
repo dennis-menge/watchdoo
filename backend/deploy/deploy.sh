@@ -168,6 +168,17 @@ if az containerapp show -n "$CONTAINER_APP_NAME" -g "$RESOURCE_GROUP" >/dev/null
         --min-replicas 0 \
         --max-replicas 1 \
         --output none
+
+    # Restart the latest revision so registry/secret/env changes take effect.
+    LATEST_REV=$(az containerapp show \
+        --name "$CONTAINER_APP_NAME" \
+        --resource-group "$RESOURCE_GROUP" \
+        --query "properties.latestRevisionName" -o tsv)
+    az containerapp revision restart \
+        --name "$CONTAINER_APP_NAME" \
+        --resource-group "$RESOURCE_GROUP" \
+        --revision "$LATEST_REV" \
+        --output none
 else
     echo "🚀 Creating container app: $CONTAINER_APP_NAME"
     az containerapp create \
