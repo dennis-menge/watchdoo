@@ -66,7 +66,7 @@ jobs:
         run: docker build -t watchdoo-backend:ci ./backend
 
       - name: Scan image with Trivy
-        uses: aquasecurity/trivy-action@0.35.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: 'watchdoo-backend:ci'
           format: 'sarif'
