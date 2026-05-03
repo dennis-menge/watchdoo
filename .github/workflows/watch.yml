@@ -23,7 +23,7 @@ jobs:
           - { scheme: 'Watchdoo',           destination: 'generic/platform=iOS Simulator'     }
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Show Xcode and SDKs
         run: |
