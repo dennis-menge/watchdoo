@@ -43,35 +43,31 @@ class ShoppingListViewModel: ObservableObject {
 
     /// Reset all in-memory + cached state.
     /// Call when the server URL or API key changes (e.g. new config from the iPhone).
-    func resetForConfigurationChange() {
+    func resetForConfigurationChange() async {
         mutationGeneration += 1
         ingredients = []
         additionalItems = []
         recipes = []
         lastUpdated = nil
         error = nil
-        Task.detached(priority: .utility) {
-            ShoppingListCache.clear()
-        }
+        await CacheWriter.shared.clear()
     }
 
     /// Persist the current in-memory state to disk.
     /// Called after every successful mutation so that a relaunch shows the
     /// latest user-confirmed state, not stale pre-mutation data.
     ///
-    /// Disk I/O is dispatched to a detached background task so it never
-    /// blocks the @MainActor — important on watchOS where flash writes can
-    /// take 10–30 ms and the user may toggle several items quickly.
-    private func saveCurrentToCache() {
+    /// Writes are enqueued on CacheWriter (a serializing actor) so disk
+    /// I/O stays off @MainActor and write ordering is deterministic across
+    /// rapid mutations and concurrent fetches.
+    private func saveCurrentToCache() async {
         let response = ShoppingListResponse(
             ingredients: ingredients,
             additionalItems: additionalItems,
             recipes: recipes
         )
         let url = currentServerURL
-        Task.detached(priority: .utility) {
-            ShoppingListCache.save(response, serverURL: url)
-        }
+        await CacheWriter.shared.save(response, serverURL: url)
         lastUpdated = Date()
     }
 
@@ -132,9 +128,7 @@ class ShoppingListViewModel: ObservableObject {
             lastUpdated = Date()
             error = nil
             let url = currentServerURL
-            Task.detached(priority: .utility) {
-                ShoppingListCache.save(response, serverURL: url)
-            }
+            await CacheWriter.shared.save(response, serverURL: url)
         } catch {
             // Keep cached data visible; only surface the error message.
             self.error = error.localizedDescription
@@ -156,7 +150,8 @@ class ShoppingListViewModel: ObservableObject {
                     id: ingredient.id,
                     isOwned: !ingredient.isOwned
                 )
-                saveCurrentToCache()
+                error = nil
+                await saveCurrentToCache()
             } catch {
                 // Revert on failure
                 if let idx = ingredients.firstIndex(where: { $0.id == ingredient.id }) {
@@ -175,7 +170,8 @@ class ShoppingListViewModel: ObservableObject {
                     id: additional.id,
                     isOwned: !additional.isOwned
                 )
-                saveCurrentToCache()
+                error = nil
+                await saveCurrentToCache()
             } catch {
                 if let idx = additionalItems.firstIndex(where: { $0.id == additional.id }) {
                     additionalItems[idx].isOwned = additional.isOwned
@@ -194,7 +190,8 @@ class ShoppingListViewModel: ObservableObject {
         do {
             let newItems = try await api.addAdditionalItems(names: [name])
             additionalItems.append(contentsOf: newItems)
-            saveCurrentToCache()
+            error = nil
+            await saveCurrentToCache()
         } catch {
             self.error = error.localizedDescription
             await fetchShoppingList() // resync
@@ -208,7 +205,8 @@ class ShoppingListViewModel: ObservableObject {
         additionalItems.removeAll { $0.id == id }
         do {
             try await api.removeAdditionalItem(id: id)
-            saveCurrentToCache()
+            error = nil
+            await saveCurrentToCache()
         } catch {
             self.error = error.localizedDescription
             await fetchShoppingList() // resync
@@ -221,7 +219,8 @@ class ShoppingListViewModel: ObservableObject {
         recipes.removeAll { $0.id == recipeId }
         do {
             try await api.removeRecipeIngredients(recipeId: recipeId)
-            saveCurrentToCache()
+            error = nil
+            await saveCurrentToCache()
         } catch {
             self.error = error.localizedDescription
             await fetchShoppingList()
@@ -241,7 +240,8 @@ class ShoppingListViewModel: ObservableObject {
 
         do {
             try await api.clearShoppingList()
-            saveCurrentToCache()
+            error = nil
+            await saveCurrentToCache()
         } catch {
             ingredients = prevIngredients
             additionalItems = prevAdditional
