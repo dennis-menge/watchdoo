@@ -55,6 +55,19 @@ struct ShoppingListView: View {
         .navigationTitle(viewMode.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    Task { await viewModel.fetchShoppingList() }
+                } label: {
+                    if viewModel.isLoading {
+                        ProgressView()
+                    } else {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                }
+                .disabled(viewModel.isLoading)
+                .accessibilityLabel("Aktualisieren")
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     withAnimation { viewMode = viewMode.toggled }

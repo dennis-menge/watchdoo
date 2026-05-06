@@ -18,6 +18,7 @@ struct ContentView: View {
     @StateObject private var viewModel = ShoppingListViewModel()
     @AppStorage("serverURL") private var serverURL = ""
     @AppStorage("apiKey") private var apiKey = ""
+    @Environment(\.scenePhase) private var scenePhase
 
     private var isConfigured: Bool {
         !serverURL.isEmpty && !apiKey.isEmpty
@@ -39,6 +40,11 @@ struct ContentView: View {
             }
             .onChange(of: isConfigured) {
                 if isConfigured {
+                    Task { await viewModel.fetchShoppingList() }
+                }
+            }
+            .onChange(of: scenePhase) { _, newPhase in
+                if newPhase == .active && isConfigured {
                     Task { await viewModel.fetchShoppingList() }
                 }
             }
