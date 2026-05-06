@@ -44,6 +44,20 @@
         }
       }
     },
+    "Liste leer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "List is empty" }
+        }
+      }
+    },
+    "Tippe auf +, um Items hinzuzufügen." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "Tap + to add items." }
+        }
+      }
+    },
     "Bitte über die Watchdoo-App auf dem iPhone konfigurieren." : {
       "localizations" : {
         "en" : {
