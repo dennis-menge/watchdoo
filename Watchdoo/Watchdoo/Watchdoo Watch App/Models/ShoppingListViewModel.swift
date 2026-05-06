@@ -50,19 +50,28 @@ class ShoppingListViewModel: ObservableObject {
         recipes = []
         lastUpdated = nil
         error = nil
-        ShoppingListCache.clear()
+        Task.detached(priority: .utility) {
+            ShoppingListCache.clear()
+        }
     }
 
     /// Persist the current in-memory state to disk.
     /// Called after every successful mutation so that a relaunch shows the
     /// latest user-confirmed state, not stale pre-mutation data.
+    ///
+    /// Disk I/O is dispatched to a detached background task so it never
+    /// blocks the @MainActor — important on watchOS where flash writes can
+    /// take 10–30 ms and the user may toggle several items quickly.
     private func saveCurrentToCache() {
         let response = ShoppingListResponse(
             ingredients: ingredients,
             additionalItems: additionalItems,
             recipes: recipes
         )
-        ShoppingListCache.save(response, serverURL: currentServerURL)
+        let url = currentServerURL
+        Task.detached(priority: .utility) {
+            ShoppingListCache.save(response, serverURL: url)
+        }
         lastUpdated = Date()
     }
 
@@ -122,7 +131,10 @@ class ShoppingListViewModel: ObservableObject {
             recipes = response.recipes
             lastUpdated = Date()
             error = nil
-            ShoppingListCache.save(response, serverURL: currentServerURL)
+            let url = currentServerURL
+            Task.detached(priority: .utility) {
+                ShoppingListCache.save(response, serverURL: url)
+            }
         } catch {
             // Keep cached data visible; only surface the error message.
             self.error = error.localizedDescription
@@ -151,6 +163,7 @@ class ShoppingListViewModel: ObservableObject {
                     ingredients[idx].isOwned = ingredient.isOwned
                 }
                 self.error = error.localizedDescription
+                await fetchShoppingList() // resync — mutation didn't reach server
             }
 
         case .additional(let additional):
@@ -168,6 +181,7 @@ class ShoppingListViewModel: ObservableObject {
                     additionalItems[idx].isOwned = additional.isOwned
                 }
                 self.error = error.localizedDescription
+                await fetchShoppingList() // resync
             }
         }
     }
@@ -183,6 +197,7 @@ class ShoppingListViewModel: ObservableObject {
             saveCurrentToCache()
         } catch {
             self.error = error.localizedDescription
+            await fetchShoppingList() // resync
         }
     }
 
