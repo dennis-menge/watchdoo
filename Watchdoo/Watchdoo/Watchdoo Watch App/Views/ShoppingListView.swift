@@ -97,9 +97,6 @@ struct ShoppingListView: View {
         .task {
             await viewModel.fetchShoppingList()
         }
-        .refreshable {
-            await viewModel.fetchShoppingList()
-        }
     }
 }
 
@@ -121,6 +118,9 @@ struct CategoryListView: View {
             }
         }
         .listStyle(.plain)
+        .refreshable {
+            await viewModel.fetchShoppingList()
+        }
         .confirmationDialog(
             "Rezept entfernen?",
             isPresented: Binding(
@@ -178,6 +178,9 @@ struct RecipeListView: View {
             }
         }
         .listStyle(.plain)
+        .refreshable {
+            await viewModel.fetchShoppingList()
+        }
         .confirmationDialog(
             "Rezept entfernen?",
             isPresented: Binding(
