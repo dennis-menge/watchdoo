@@ -69,30 +69,38 @@ enum ShoppingListCache {
 ///     `save()` from the previous configuration, recreating the cache after
 ///     the clear was supposed to wipe it.
 ///
-/// The actor enqueues each operation as a detached Task that first awaits
-/// the previous task's completion, guaranteeing strict FIFO execution while
-/// keeping the actual disk I/O off both the @MainActor and this actor's
-/// executor.
+/// Each write is enqueued as a detached Task that first awaits the previous
+/// task's completion, guaranteeing strict FIFO execution while keeping disk
+/// I/O off both the @MainActor and this actor's executor.
+///
+/// `save` and `clear` are `async` and await their own task, so when these
+/// methods return the data has actually hit disk — providing the durability
+/// the cache-after-mutation feature relies on (a quick app termination
+/// after the await returns will still preserve the snapshot).
 actor CacheWriter {
     static let shared = CacheWriter()
     private init() {}
 
     private var pending: Task<Void, Never>?
 
-    func save(_ response: ShoppingListResponse, serverURL: String) {
+    func save(_ response: ShoppingListResponse, serverURL: String) async {
         let previous = pending
-        pending = Task.detached(priority: .utility) {
+        let task = Task.detached(priority: .utility) {
             await previous?.value
             ShoppingListCache.save(response, serverURL: serverURL)
         }
+        pending = task
+        await task.value
     }
 
-    func clear() {
+    func clear() async {
         let previous = pending
-        pending = Task.detached(priority: .utility) {
+        let task = Task.detached(priority: .utility) {
             await previous?.value
             ShoppingListCache.clear()
         }
+        pending = task
+        await task.value
     }
 
     /// Wait for all pending writes to complete. Useful for tests and for

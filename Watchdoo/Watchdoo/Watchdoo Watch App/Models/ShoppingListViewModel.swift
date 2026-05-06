@@ -50,6 +50,11 @@ class ShoppingListViewModel: ObservableObject {
         recipes = []
         lastUpdated = nil
         error = nil
+        // An in-flight fetch's deferred isLoading=false will still run when
+        // its response (eventually) arrives, but we set it now so the UI
+        // doesn't stay stuck on ProgressView while a stale cold-start fetch
+        // is still pending against the old backend.
+        isLoading = false
         await CacheWriter.shared.clear()
     }
 
