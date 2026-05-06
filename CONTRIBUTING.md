@@ -37,6 +37,30 @@ pytest
 - Add a test in `backend/tests/` for any new endpoint or behavior change
 - No formatter is enforced; please match surrounding style
 
+## Before your first commit: install git hooks
+
+The repo ships a pre-commit hook that strips your personal Apple
+Developer Team ID out of `*.pbxproj` files automatically — Xcode's
+"Automatically manage signing" likes to rewrite `DEVELOPMENT_TEAM = ""`
+back to your team every time you open the project, and that team ID
+must not end up in upstream commits.
+
+One-time setup after cloning:
+
+```bash
+./scripts/install-hooks.sh
+```
+
+That command sets `git config core.hooksPath .githooks`, after which
+every commit that touches a `*.pbxproj` runs through `.githooks/pre-commit`.
+The hook detects 10-character uppercase team IDs (e.g. `5J8KP44BWJ`) and
+replaces them with `DEVELOPMENT_TEAM = ""` in-place, then re-stages the
+file. You'll see a one-line `pre-commit: stripping personal
+DEVELOPMENT_TEAM from …` notice when it kicks in.
+
+Your local Xcode setup is unaffected — the team only matters in the
+working tree at build time, not in committed history.
+
 ## Watch / Companion App (Swift)
 
 - Open `Watchdoo/Watchdoo/Watchdoo.xcodeproj` in Xcode 15+

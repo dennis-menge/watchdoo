@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+#
+# Strip personal Apple team identifiers from staged Xcode project files
+# before they enter a commit. Apple team IDs are 10 uppercase alphanumeric
+# characters (e.g. "5J8KP44BWJ"); we always replace them with an empty
+# string so the project signs against whichever team a contributor has
+# selected locally.
+#
+# This hook is opt-in: it only runs once you've activated the in-tree
+# hooks directory once per clone, e.g. by running
+#   ./scripts/install-hooks.sh
+# (see CONTRIBUTING.md), which sets `git config core.hooksPath .githooks`.
+#
+# Portable POSIX-ish bash — works on macOS bash 3.2 and modern Linux.
+
+set -eu
+
+modified=0
+while IFS= read -r f; do
+    [ -z "$f" ] && continue
+
+    # Refuse to act if the working-tree copy of the file has unstaged edits
+    # on top of the index. We only ever want to rewrite what's actually
+    # being committed, never silently sweep up someone's in-progress edits.
+    if ! git diff --quiet -- "$f"; then
+        echo "pre-commit: $f has unstaged changes." >&2
+        echo "  The hook only operates safely on fully-staged files; please" >&2
+        echo "  either stage the rest with 'git add $f' or stash the unstaged" >&2
+        echo "  portion before committing." >&2
+        exit 1
+    fi
+
+    if grep -Eq 'DEVELOPMENT_TEAM = [A-Z0-9]{10};' "$f"; then
+        echo "pre-commit: stripping personal DEVELOPMENT_TEAM from $f"
+        # Use a temp-file workaround so this works on both macOS sed (BSD)
+        # and GNU sed without the `-i ''` portability dance.
+        sed -E 's/DEVELOPMENT_TEAM = [A-Z0-9]{10};/DEVELOPMENT_TEAM = "";/g' "$f" > "$f.sanitized"
+        mv "$f.sanitized" "$f"
+        git add "$f"
+        modified=1
+    fi
+done <<EOF
+$(git diff --cached --name-only --diff-filter=ACMRT | grep -E '\.pbxproj$' || true)
+EOF
+
+if [ "$modified" -eq 1 ]; then
+    echo "pre-commit: re-staged sanitized .pbxproj files"
+fi
+
+exit 0
