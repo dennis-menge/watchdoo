@@ -67,6 +67,9 @@ struct ShoppingListView: View {
                 } label: {
                     if viewModel.isLoading {
                         ProgressView()
+                    } else if viewModel.error != nil {
+                        Image(systemName: "exclamationmark.arrow.triangle.2.circlepath")
+                            .foregroundColor(.orange)
                     } else {
                         Image(systemName: "arrow.clockwise")
                     }

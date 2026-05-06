@@ -10,8 +10,41 @@ class ShoppingListViewModel: ObservableObject {
     @Published var recipes: [ShoppingRecipe] = []
     @Published var isLoading = false
     @Published var error: String?
+    @Published var lastUpdated: Date?
 
     private let api = APIService.shared
+
+    init() {
+        loadFromCache()
+    }
+
+    private var currentServerURL: String {
+        UserDefaults.standard.string(forKey: "serverURL") ?? ""
+    }
+
+    private func loadFromCache() {
+        guard let snapshot = ShoppingListCache.load() else { return }
+        let configured = currentServerURL
+        guard !configured.isEmpty, snapshot.serverURL == configured else {
+            ShoppingListCache.clear()
+            return
+        }
+        ingredients = snapshot.response.ingredients
+        additionalItems = snapshot.response.additionalItems
+        recipes = snapshot.response.recipes
+        lastUpdated = snapshot.fetchedAt
+    }
+
+    /// Reset all in-memory + cached state.
+    /// Call when the server URL or API key changes (e.g. new config from the iPhone).
+    func resetForConfigurationChange() {
+        ingredients = []
+        additionalItems = []
+        recipes = []
+        lastUpdated = nil
+        error = nil
+        ShoppingListCache.clear()
+    }
 
     // MARK: - Grouped Data
 
@@ -50,7 +83,10 @@ class ShoppingListViewModel: ObservableObject {
 
     func fetchShoppingList() async {
         isLoading = true
-        error = nil
+        let hadCache = !ingredients.isEmpty || !additionalItems.isEmpty || !recipes.isEmpty
+        if !hadCache {
+            error = nil
+        }
         defer { isLoading = false }
 
         do {
@@ -58,7 +94,11 @@ class ShoppingListViewModel: ObservableObject {
             ingredients = response.ingredients
             additionalItems = response.additionalItems
             recipes = response.recipes
+            lastUpdated = Date()
+            error = nil
+            ShoppingListCache.save(response, serverURL: currentServerURL)
         } catch {
+            // Keep cached data visible; only surface the error message.
             self.error = error.localizedDescription
         }
     }

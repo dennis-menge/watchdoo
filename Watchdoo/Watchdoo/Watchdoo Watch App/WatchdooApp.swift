@@ -33,12 +33,14 @@ struct ContentView: View {
                     ShoppingListView(viewModel: viewModel)
                 }
             }
-            .onChange(of: connectivityManager.receivedConfig) {
-                if connectivityManager.receivedConfig {
+            .onChange(of: serverURL) {
+                viewModel.resetForConfigurationChange()
+                if isConfigured {
                     Task { await viewModel.fetchShoppingList() }
                 }
             }
-            .onChange(of: isConfigured) {
+            .onChange(of: apiKey) {
+                viewModel.resetForConfigurationChange()
                 if isConfigured {
                     Task { await viewModel.fetchShoppingList() }
                 }
