@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+#
+# Strip personal Apple team identifiers from staged Xcode project files
+# before they enter a commit. Apple team IDs are 10 uppercase alphanumeric
+# characters (e.g. "5J8KP44BWJ"); we always replace them with an empty
+# string so the project signs against whichever team a contributor has
+# selected locally.
+#
+# Triggered automatically when this repo is cloned and
+#   git config core.hooksPath .githooks
+# is configured (see CONTRIBUTING.md).
+#
+# Portable POSIX-ish bash — works on macOS bash 3.2 and modern Linux.
+
+set -eu
+
+modified=0
+while IFS= read -r f; do
+    [ -z "$f" ] && continue
+    if grep -Eq 'DEVELOPMENT_TEAM = [A-Z0-9]{10};' "$f"; then
+        echo "pre-commit: stripping personal DEVELOPMENT_TEAM from $f"
+        # Use a temp-file workaround so this works on both macOS sed (BSD)
+        # and GNU sed without the `-i ''` portability dance.
+        sed -E 's/DEVELOPMENT_TEAM = [A-Z0-9]{10};/DEVELOPMENT_TEAM = "";/g' "$f" > "$f.sanitized"
+        mv "$f.sanitized" "$f"
+        git add "$f"
+        modified=1
+    fi
+done <<EOF
+$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.pbxproj$' || true)
+EOF
+
+if [ "$modified" -eq 1 ]; then
+    echo "pre-commit: re-staged sanitized .pbxproj files"
+fi
+
+exit 0
