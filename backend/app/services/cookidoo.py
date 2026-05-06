@@ -126,6 +126,12 @@ class CookidooService:
             cookidoo.remove_ingredient_items_for_recipes, recipe_ids
         )
 
+    async def clear_shopping_list(self) -> None:
+        """Remove all additional items, ingredients, and recipes from the shopping list."""
+        cookidoo = await self._ensure_session()
+        await self._with_retry(cookidoo.clear_shopping_list)
+        logger.info("Shopping list cleared")
+
     async def refresh_token(self) -> None:
         """Manually refresh the Cookidoo auth token."""
         cookidoo = await self._ensure_session()

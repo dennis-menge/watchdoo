@@ -192,6 +192,32 @@ async def test_remove_recipe_ingredients(client, mock_cookidoo):
     assert response.json()["status"] == "ok"
 
 
+# --- DELETE /shopping-list (clear all) ---
+
+@pytest.mark.anyio
+async def test_clear_shopping_list(client, mock_cookidoo):
+    """Should clear the entire shopping list."""
+    with patch.object(
+        mock_cookidoo, "clear_shopping_list",
+        new_callable=AsyncMock,
+    ) as mock_clear:
+        response = await client.delete(
+            "/api/v1/shopping-list",
+            headers=AUTH_HEADER,
+        )
+
+    assert response.status_code == 200
+    assert response.json()["status"] == "ok"
+    mock_clear.assert_awaited_once()
+
+
+@pytest.mark.anyio
+async def test_clear_shopping_list_no_auth(client):
+    """Clearing without auth should be rejected."""
+    response = await client.delete("/api/v1/shopping-list")
+    assert response.status_code == 401
+
+
 # --- PATCH /shopping-list/additional-items/ownership ---
 
 @pytest.mark.anyio

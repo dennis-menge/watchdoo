@@ -5,6 +5,7 @@ struct ShoppingListView: View {
     @ObservedObject var viewModel: ShoppingListViewModel
     @State private var viewMode: ViewMode = .category
     @State private var showAddItem = false
+    @State private var showClearConfirmation = false
 
     enum ViewMode {
         case category
@@ -27,6 +28,10 @@ struct ShoppingListView: View {
         var toggled: ViewMode {
             self == .category ? .recipe : .category
         }
+    }
+
+    private var hasAnyItems: Bool {
+        !viewModel.ingredients.isEmpty || !viewModel.additionalItems.isEmpty
     }
 
     var body: some View {
@@ -58,6 +63,13 @@ struct ShoppingListView: View {
                 }
             }
             ToolbarItemGroup(placement: .bottomBar) {
+                Button {
+                    showClearConfirmation = true
+                } label: {
+                    Image(systemName: "trash")
+                }
+                .tint(.red)
+                .disabled(!hasAnyItems)
                 Spacer()
                 Button {
                     showAddItem = true
@@ -70,6 +82,18 @@ struct ShoppingListView: View {
         }
         .sheet(isPresented: $showAddItem) {
             AddItemView(viewModel: viewModel)
+        }
+        .confirmationDialog(
+            "Liste komplett löschen?",
+            isPresented: $showClearConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button("Alles löschen", role: .destructive) {
+                Task { await viewModel.clearShoppingList() }
+            }
+            Button("Abbrechen", role: .cancel) {}
+        } message: {
+            Text("Alle Zutaten, Rezepte und eigenen Items werden aus der Cookidoo-Einkaufsliste entfernt.")
         }
         .task {
             await viewModel.fetchShoppingList()

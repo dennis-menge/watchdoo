@@ -47,6 +47,11 @@ actor APIService {
         return
     }
 
+    func clearShoppingList() async throws {
+        let _: EmptyResponse = try await request(.delete, path: "/api/v1/shopping-list")
+        return
+    }
+
     func checkHealth() async throws -> Bool {
         struct HealthResponse: Decodable {
             let status: String

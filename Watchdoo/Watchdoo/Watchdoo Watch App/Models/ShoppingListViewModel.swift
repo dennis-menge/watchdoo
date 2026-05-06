@@ -137,4 +137,25 @@ class ShoppingListViewModel: ObservableObject {
             await fetchShoppingList()
         }
     }
+
+    func clearShoppingList() async {
+        // Snapshot for rollback on failure.
+        let prevIngredients = ingredients
+        let prevAdditional = additionalItems
+        let prevRecipes = recipes
+
+        ingredients = []
+        additionalItems = []
+        recipes = []
+
+        do {
+            try await api.clearShoppingList()
+        } catch {
+            ingredients = prevIngredients
+            additionalItems = prevAdditional
+            recipes = prevRecipes
+            self.error = error.localizedDescription
+            await fetchShoppingList()
+        }
+    }
 }
