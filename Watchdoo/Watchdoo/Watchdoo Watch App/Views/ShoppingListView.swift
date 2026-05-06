@@ -36,12 +36,18 @@ struct ShoppingListView: View {
 
     var body: some View {
         Group {
-            if viewModel.isLoading && viewModel.ingredients.isEmpty {
+            if viewModel.isLoading && !hasAnyItems {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else if let error = viewModel.error, viewModel.ingredients.isEmpty {
+            } else if let error = viewModel.error, !hasAnyItems {
                 ErrorView(message: error) {
                     Task { await viewModel.fetchShoppingList() }
+                }
+            } else if !hasAnyItems {
+                ContentUnavailableView {
+                    Label("Liste leer", systemImage: "cart")
+                } description: {
+                    Text("Tippe auf +, um Items hinzuzufügen.")
                 }
             } else {
                 switch viewMode {
