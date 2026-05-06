@@ -12,7 +12,7 @@ class ShoppingListViewModel: ObservableObject {
     @Published var error: String?
     @Published var lastUpdated: Date?
 
-    private let api = APIService.shared
+    private let api: any ShoppingListAPI
 
     /// Incremented on every local mutation. Used to discard stale fetch
     /// responses that completed after a user mutation — without this, an
@@ -20,7 +20,8 @@ class ShoppingListViewModel: ObservableObject {
     /// server state.
     private var mutationGeneration: Int = 0
 
-    init() {
+    init(api: any ShoppingListAPI = APIService.shared) {
+        self.api = api
         loadFromCache()
     }
 
@@ -144,6 +145,7 @@ class ShoppingListViewModel: ObservableObject {
 
     func toggleItem(_ item: ShoppingItem) async {
         mutationGeneration += 1
+        let myGen = mutationGeneration
         switch item {
         case .ingredient(let ingredient):
             // Optimistic update
@@ -156,6 +158,7 @@ class ShoppingListViewModel: ObservableObject {
                     isOwned: !ingredient.isOwned
                 )
                 error = nil
+                guard myGen == mutationGeneration else { return }
                 await saveCurrentToCache()
             } catch {
                 // Revert on failure
@@ -176,6 +179,7 @@ class ShoppingListViewModel: ObservableObject {
                     isOwned: !additional.isOwned
                 )
                 error = nil
+                guard myGen == mutationGeneration else { return }
                 await saveCurrentToCache()
             } catch {
                 if let idx = additionalItems.firstIndex(where: { $0.id == additional.id }) {
@@ -192,10 +196,12 @@ class ShoppingListViewModel: ObservableObject {
     func addItem(name: String) async {
         guard !name.trimmingCharacters(in: .whitespaces).isEmpty else { return }
         mutationGeneration += 1
+        let myGen = mutationGeneration
         do {
             let newItems = try await api.addAdditionalItems(names: [name])
             additionalItems.append(contentsOf: newItems)
             error = nil
+            guard myGen == mutationGeneration else { return }
             await saveCurrentToCache()
         } catch {
             self.error = error.localizedDescription
@@ -207,10 +213,12 @@ class ShoppingListViewModel: ObservableObject {
 
     func removeAdditionalItem(id: String) async {
         mutationGeneration += 1
+        let myGen = mutationGeneration
         additionalItems.removeAll { $0.id == id }
         do {
             try await api.removeAdditionalItem(id: id)
             error = nil
+            guard myGen == mutationGeneration else { return }
             await saveCurrentToCache()
         } catch {
             self.error = error.localizedDescription
@@ -220,11 +228,13 @@ class ShoppingListViewModel: ObservableObject {
 
     func removeRecipeIngredients(recipeId: String) async {
         mutationGeneration += 1
+        let myGen = mutationGeneration
         ingredients.removeAll { $0.recipeId == recipeId }
         recipes.removeAll { $0.id == recipeId }
         do {
             try await api.removeRecipeIngredients(recipeId: recipeId)
             error = nil
+            guard myGen == mutationGeneration else { return }
             await saveCurrentToCache()
         } catch {
             self.error = error.localizedDescription
@@ -234,6 +244,7 @@ class ShoppingListViewModel: ObservableObject {
 
     func clearShoppingList() async {
         mutationGeneration += 1
+        let myGen = mutationGeneration
         // Snapshot for rollback on failure.
         let prevIngredients = ingredients
         let prevAdditional = additionalItems
@@ -246,6 +257,7 @@ class ShoppingListViewModel: ObservableObject {
         do {
             try await api.clearShoppingList()
             error = nil
+            guard myGen == mutationGeneration else { return }
             await saveCurrentToCache()
         } catch {
             ingredients = prevIngredients
