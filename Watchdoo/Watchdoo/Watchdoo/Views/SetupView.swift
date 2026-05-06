@@ -6,7 +6,12 @@ struct SetupView: View {
     @AppStorage("serverURL") private var serverURL = ""
     @AppStorage("apiKey") private var apiKey = ""
     @State private var isTestingConnection = false
-    @State private var connectionOk: Bool?
+    @State private var connectionResult: ConnectionResult?
+
+    private enum ConnectionResult {
+        case success
+        case failure(String)
+    }
 
     var body: some View {
         NavigationStack {
@@ -55,13 +60,20 @@ struct SetupView: View {
                     }
                     .disabled(serverURL.isEmpty || apiKey.isEmpty || isTestingConnection)
 
-                    if let ok = connectionOk {
-                        if ok {
+                    if let result = connectionResult {
+                        switch result {
+                        case .success:
                             Label("Verbindung erfolgreich", systemImage: "checkmark.circle.fill")
                                 .foregroundColor(.green)
-                        } else {
-                            Label("Verbindung fehlgeschlagen", systemImage: "xmark.circle.fill")
-                                .foregroundColor(.red)
+                        case .failure(let message):
+                            VStack(alignment: .leading, spacing: 4) {
+                                Label("Verbindung fehlgeschlagen", systemImage: "xmark.circle.fill")
+                                    .foregroundColor(.red)
+                                Text(message)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
                         }
                     }
                 }
@@ -125,25 +137,64 @@ struct SetupView: View {
         isTestingConnection = true
         defer { isTestingConnection = false }
 
-        guard let url = URL(string: serverURL + "/api/v1/health") else {
-            connectionOk = false
+        // Trim whitespace + a stray trailing slash so paste-from-clipboard "just works".
+        let cleanURL = serverURL.trimmingCharacters(in: .whitespacesAndNewlines)
+            .trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+        let cleanKey = apiKey.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // Persist the cleaned versions so the user sees what'll actually be sent.
+        if cleanURL != serverURL { serverURL = cleanURL }
+        if cleanKey != apiKey { apiKey = cleanKey }
+
+        guard !cleanURL.isEmpty, let url = URL(string: cleanURL + "/api/v1/health") else {
+            connectionResult = .failure("Ungültige URL.")
+            return
+        }
+        guard cleanURL.lowercased().hasPrefix("https://") || cleanURL.lowercased().hasPrefix("http://") else {
+            connectionResult = .failure("URL muss mit https:// beginnen.")
             return
         }
 
         var request = URLRequest(url: url)
-        request.timeoutInterval = 10
+        // Azure Container Apps with scale-to-zero can take ~15s to wake up,
+        // so allow generous timeout on the very first request.
+        request.timeoutInterval = 45
 
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
-            guard let httpResponse = response as? HTTPURLResponse,
-                  httpResponse.statusCode == 200 else {
-                connectionOk = false
+            guard let httpResponse = response as? HTTPURLResponse else {
+                connectionResult = .failure("Keine HTTP-Antwort vom Server.")
+                return
+            }
+            guard httpResponse.statusCode == 200 else {
+                connectionResult = .failure("HTTP \(httpResponse.statusCode) vom Server.")
                 return
             }
             let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
-            connectionOk = json?["status"] as? String == "ok"
+            if json?["status"] as? String == "ok" {
+                connectionResult = .success
+            } else {
+                connectionResult = .failure("Antwort hat unerwartetes Format.")
+            }
+        } catch let error as URLError {
+            let detail: String
+            switch error.code {
+            case .timedOut:
+                detail = "Timeout (45s). Backend startet vielleicht noch — bitte erneut versuchen."
+            case .cannotFindHost:
+                detail = "Server nicht gefunden. URL prüfen."
+            case .cannotConnectToHost:
+                detail = "Kann den Server nicht erreichen."
+            case .notConnectedToInternet:
+                detail = "Kein Internet."
+            case .secureConnectionFailed, .serverCertificateUntrusted, .serverCertificateHasBadDate:
+                detail = "TLS/HTTPS-Fehler."
+            default:
+                detail = error.localizedDescription
+            }
+            connectionResult = .failure(detail)
         } catch {
-            connectionOk = false
+            connectionResult = .failure(error.localizedDescription)
         }
     }
 
