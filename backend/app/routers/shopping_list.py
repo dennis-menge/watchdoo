@@ -192,3 +192,14 @@ async def remove_recipe_ingredients(recipe_id: str):
     except Exception as e:
         logger.exception("Failed to remove recipe ingredients")
         raise HTTPException(status_code=502, detail=f"Cookidoo error: {e}") from e
+
+
+@router.delete("/shopping-list")
+async def clear_shopping_list():
+    """Remove all additional items, ingredients, and recipes from the shopping list."""
+    try:
+        await cookidoo_service.clear_shopping_list()
+        return {"status": "ok"}
+    except Exception as e:
+        logger.exception("Failed to clear shopping list")
+        raise HTTPException(status_code=502, detail=f"Cookidoo error: {e}") from e

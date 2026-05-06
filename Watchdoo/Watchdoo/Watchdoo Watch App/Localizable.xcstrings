@@ -15,6 +15,27 @@
         }
       }
     },
+    "Alle Zutaten, Rezepte und eigenen Items werden aus der Cookidoo-Einkaufsliste entfernt." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "All ingredients, recipes, and custom items will be removed from the Cookidoo shopping list." }
+        }
+      }
+    },
+    "Alles löschen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "Clear all" }
+        }
+      }
+    },
+    "Liste komplett löschen?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "Clear entire list?" }
+        }
+      }
+    },
     "Bitte über die Watchdoo-App auf dem iPhone konfigurieren." : {
       "localizations" : {
         "en" : {
