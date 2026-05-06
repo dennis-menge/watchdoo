@@ -95,7 +95,7 @@ actor APIService {
         urlRequest.httpMethod = method.rawValue
         urlRequest.setValue(apiKey, forHTTPHeaderField: "X-API-Key")
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        urlRequest.timeoutInterval = 30
+        urlRequest.timeoutInterval = 60
 
         if let body = body {
             urlRequest.httpBody = try JSONSerialization.data(withJSONObject: body)
