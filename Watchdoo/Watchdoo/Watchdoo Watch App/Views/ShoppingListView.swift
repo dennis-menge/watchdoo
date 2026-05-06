@@ -55,6 +55,19 @@ struct ShoppingListView: View {
         .navigationTitle(viewMode.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    Task { await viewModel.fetchShoppingList() }
+                } label: {
+                    if viewModel.isLoading {
+                        ProgressView()
+                    } else {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                }
+                .disabled(viewModel.isLoading)
+                .accessibilityLabel("Aktualisieren")
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     withAnimation { viewMode = viewMode.toggled }
@@ -97,9 +110,6 @@ struct ShoppingListView: View {
         .task {
             await viewModel.fetchShoppingList()
         }
-        .refreshable {
-            await viewModel.fetchShoppingList()
-        }
     }
 }
 
@@ -121,6 +131,9 @@ struct CategoryListView: View {
             }
         }
         .listStyle(.plain)
+        .refreshable {
+            await viewModel.fetchShoppingList()
+        }
         .confirmationDialog(
             "Rezept entfernen?",
             isPresented: Binding(
@@ -178,6 +191,9 @@ struct RecipeListView: View {
             }
         }
         .listStyle(.plain)
+        .refreshable {
+            await viewModel.fetchShoppingList()
+        }
         .confirmationDialog(
             "Rezept entfernen?",
             isPresented: Binding(

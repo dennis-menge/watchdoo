@@ -4,161 +4,233 @@
     "Abbrechen" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Cancel" }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
         }
       }
+    },
+    "Aktualisieren" : {
+
     },
     "Alle Zutaten von \"%@\" entfernen" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Remove all ingredients of \"%@\"" }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove all ingredients of \"%@\""
+          }
         }
       }
     },
     "Alle Zutaten, Rezepte und eigenen Items werden aus der Cookidoo-Einkaufsliste entfernt." : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "All ingredients, recipes, and custom items will be removed from the Cookidoo shopping list." }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All ingredients, recipes, and custom items will be removed from the Cookidoo shopping list."
+          }
         }
       }
     },
     "Alles löschen" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Clear all" }
-        }
-      }
-    },
-    "Liste komplett löschen?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Clear entire list?" }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear all"
+          }
         }
       }
     },
     "Bitte über die Watchdoo-App auf dem iPhone konfigurieren." : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Please configure via the Watchdoo app on your iPhone." }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please configure via the Watchdoo app on your iPhone."
+          }
         }
       }
     },
     "Cookidoo-Verbindung fehlgeschlagen" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Cookidoo connection failed" }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookidoo connection failed"
+          }
         }
       }
     },
     "Erneut versuchen" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Retry" }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retry"
+          }
         }
       }
     },
     "Gerichte" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Recipes" }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recipes"
+          }
         }
       }
     },
     "Hinzufügen" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Add" }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
+          }
+        }
+      }
+    },
+    "Liste komplett löschen?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear entire list?"
+          }
         }
       }
     },
     "Löschen" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Delete" }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
         }
       }
     },
     "Name eingeben" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Enter name" }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter name"
+          }
         }
       }
     },
     "Neues Item" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "New Item" }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Item"
+          }
         }
       }
     },
     "Nicht konfiguriert" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Not configured" }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not configured"
+          }
         }
       }
     },
     "Rezept entfernen" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Remove recipe" }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove recipe"
+          }
         }
       }
     },
     "Rezept entfernen?" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Remove recipe?" }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove recipe?"
+          }
         }
       }
     },
     "Server nicht konfiguriert. Bitte über die iPhone-App konfigurieren." : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Server not configured. Please configure via the iPhone app." }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server not configured. Please configure via the iPhone app."
+          }
         }
       }
     },
     "Server-Fehler (%lld)" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Server error (%lld)" }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server error (%lld)"
+          }
         }
       }
     },
     "Sonstiges" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Other" }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other"
+          }
         }
       }
     },
     "Ungültige Server-Antwort" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Invalid server response" }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid server response"
+          }
         }
       }
     },
     "Ungültige Server-URL" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Invalid server URL" }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid server URL"
+          }
         }
       }
     },
     "Ungültiger API-Key" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Invalid API key" }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid API key"
+          }
         }
       }
     },
     "Zutaten" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Ingredients" }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingredients"
+          }
         }
       }
     }
