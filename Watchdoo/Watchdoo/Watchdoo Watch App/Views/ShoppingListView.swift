@@ -77,7 +77,6 @@ struct ShoppingListView: View {
                     Image(systemName: "plus")
                 }
                 .tint(Color("AccentColor"))
-                Spacer()
             }
         }
         .sheet(isPresented: $showAddItem) {
