@@ -14,6 +14,12 @@ class ShoppingListViewModel: ObservableObject {
 
     private let api = APIService.shared
 
+    /// Incremented on every local mutation. Used to discard stale fetch
+    /// responses that completed after a user mutation — without this, an
+    /// in-flight fetch could clobber an optimistic update with pre-mutation
+    /// server state.
+    private var mutationGeneration: Int = 0
+
     init() {
         loadFromCache()
     }
@@ -38,12 +44,26 @@ class ShoppingListViewModel: ObservableObject {
     /// Reset all in-memory + cached state.
     /// Call when the server URL or API key changes (e.g. new config from the iPhone).
     func resetForConfigurationChange() {
+        mutationGeneration += 1
         ingredients = []
         additionalItems = []
         recipes = []
         lastUpdated = nil
         error = nil
         ShoppingListCache.clear()
+    }
+
+    /// Persist the current in-memory state to disk.
+    /// Called after every successful mutation so that a relaunch shows the
+    /// latest user-confirmed state, not stale pre-mutation data.
+    private func saveCurrentToCache() {
+        let response = ShoppingListResponse(
+            ingredients: ingredients,
+            additionalItems: additionalItems,
+            recipes: recipes
+        )
+        ShoppingListCache.save(response, serverURL: currentServerURL)
+        lastUpdated = Date()
     }
 
     // MARK: - Grouped Data
@@ -82,6 +102,7 @@ class ShoppingListViewModel: ObservableObject {
     // MARK: - Data Fetching
 
     func fetchShoppingList() async {
+        let myGeneration = mutationGeneration
         isLoading = true
         let hadCache = !ingredients.isEmpty || !additionalItems.isEmpty || !recipes.isEmpty
         if !hadCache {
@@ -91,6 +112,11 @@ class ShoppingListViewModel: ObservableObject {
 
         do {
             let response = try await api.fetchShoppingList()
+            // Discard stale responses: the user mutated state while this
+            // fetch was in flight, so its body no longer reflects what the
+            // user expects to see. Local state is already authoritative;
+            // the next fetch will pick up the post-mutation server state.
+            guard myGeneration == mutationGeneration else { return }
             ingredients = response.ingredients
             additionalItems = response.additionalItems
             recipes = response.recipes
@@ -106,6 +132,7 @@ class ShoppingListViewModel: ObservableObject {
     // MARK: - Toggle Ownership
 
     func toggleItem(_ item: ShoppingItem) async {
+        mutationGeneration += 1
         switch item {
         case .ingredient(let ingredient):
             // Optimistic update
@@ -117,6 +144,7 @@ class ShoppingListViewModel: ObservableObject {
                     id: ingredient.id,
                     isOwned: !ingredient.isOwned
                 )
+                saveCurrentToCache()
             } catch {
                 // Revert on failure
                 if let idx = ingredients.firstIndex(where: { $0.id == ingredient.id }) {
@@ -134,6 +162,7 @@ class ShoppingListViewModel: ObservableObject {
                     id: additional.id,
                     isOwned: !additional.isOwned
                 )
+                saveCurrentToCache()
             } catch {
                 if let idx = additionalItems.firstIndex(where: { $0.id == additional.id }) {
                     additionalItems[idx].isOwned = additional.isOwned
@@ -147,9 +176,11 @@ class ShoppingListViewModel: ObservableObject {
 
     func addItem(name: String) async {
         guard !name.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+        mutationGeneration += 1
         do {
             let newItems = try await api.addAdditionalItems(names: [name])
             additionalItems.append(contentsOf: newItems)
+            saveCurrentToCache()
         } catch {
             self.error = error.localizedDescription
         }
@@ -158,9 +189,11 @@ class ShoppingListViewModel: ObservableObject {
     // MARK: - Remove Items
 
     func removeAdditionalItem(id: String) async {
+        mutationGeneration += 1
         additionalItems.removeAll { $0.id == id }
         do {
             try await api.removeAdditionalItem(id: id)
+            saveCurrentToCache()
         } catch {
             self.error = error.localizedDescription
             await fetchShoppingList() // resync
@@ -168,10 +201,12 @@ class ShoppingListViewModel: ObservableObject {
     }
 
     func removeRecipeIngredients(recipeId: String) async {
+        mutationGeneration += 1
         ingredients.removeAll { $0.recipeId == recipeId }
         recipes.removeAll { $0.id == recipeId }
         do {
             try await api.removeRecipeIngredients(recipeId: recipeId)
+            saveCurrentToCache()
         } catch {
             self.error = error.localizedDescription
             await fetchShoppingList()
@@ -179,6 +214,7 @@ class ShoppingListViewModel: ObservableObject {
     }
 
     func clearShoppingList() async {
+        mutationGeneration += 1
         // Snapshot for rollback on failure.
         let prevIngredients = ingredients
         let prevAdditional = additionalItems
@@ -190,6 +226,7 @@ class ShoppingListViewModel: ObservableObject {
 
         do {
             try await api.clearShoppingList()
+            saveCurrentToCache()
         } catch {
             ingredients = prevIngredients
             additionalItems = prevAdditional
