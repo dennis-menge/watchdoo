@@ -108,6 +108,16 @@
         }
       }
     },
+    "wird hinzugefügt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "adding"
+          }
+        }
+      }
+    },
     "Liste komplett löschen?" : {
       "localizations" : {
         "en" : {
