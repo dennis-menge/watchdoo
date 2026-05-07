@@ -18,9 +18,14 @@ struct AddItemView: View {
                     .disabled(isSaving)
 
                 Button {
+                    // Guard synchronously so a quick double-tap can't enqueue
+                    // a second Task before the disabled state propagates.
+                    guard !isSaving else { return }
+                    let trimmed = itemName.trimmingCharacters(in: .whitespaces)
+                    guard !trimmed.isEmpty else { return }
+                    isSaving = true
                     Task {
-                        isSaving = true
-                        await viewModel.addItem(name: itemName)
+                        await viewModel.addItem(name: trimmed)
                         dismiss()
                     }
                 } label: {
@@ -36,6 +41,8 @@ struct AddItemView: View {
                 .buttonStyle(.borderedProminent)
                 .tint(Color("AccentColor"))
                 .disabled(isSaving || itemName.trimmingCharacters(in: .whitespaces).isEmpty)
+                .accessibilityLabel("Hinzufügen")
+                .accessibilityValue(isSaving ? Text("wird hinzugefügt") : Text(""))
             }
             .padding()
         }
