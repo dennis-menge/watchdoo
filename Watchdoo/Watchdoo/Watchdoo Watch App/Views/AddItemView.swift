@@ -5,6 +5,7 @@ struct AddItemView: View {
     @ObservedObject var viewModel: ShoppingListViewModel
     @Environment(\.dismiss) private var dismiss
     @State private var itemName = ""
+    @State private var isSaving = false
 
     var body: some View {
         NavigationStack {
@@ -14,19 +15,27 @@ struct AddItemView: View {
 
                 TextField("Name eingeben", text: $itemName)
                     .textFieldStyle(.plain)
+                    .disabled(isSaving)
 
                 Button {
                     Task {
+                        isSaving = true
                         await viewModel.addItem(name: itemName)
                         dismiss()
                     }
                 } label: {
-                    Label("Hinzufügen", systemImage: "plus.circle.fill")
-                        .frame(maxWidth: .infinity)
+                    Group {
+                        if isSaving {
+                            ProgressView()
+                        } else {
+                            Label("Hinzufügen", systemImage: "plus.circle.fill")
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(Color("AccentColor"))
-                .disabled(itemName.trimmingCharacters(in: .whitespaces).isEmpty)
+                .disabled(isSaving || itemName.trimmingCharacters(in: .whitespaces).isEmpty)
             }
             .padding()
         }
