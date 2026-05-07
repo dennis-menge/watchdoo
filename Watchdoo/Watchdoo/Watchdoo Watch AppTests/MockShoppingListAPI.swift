@@ -18,6 +18,7 @@ actor MockShoppingListAPI: ShoppingListAPI {
     private var toggleIngredientResult: Result<[IngredientItem], Error> = .success([])
     private var toggleAdditionalResult: Result<[AdditionalItem], Error> = .success([])
     private var addResult: Result<[AdditionalItem], Error> = .success([])
+    private var addResults: [Result<[AdditionalItem], Error>] = []
     private var removeAdditionalResult: Result<Void, Error> = .success(())
     private var removeRecipeResult: Result<Void, Error> = .success(())
     private var clearResult: Result<Void, Error> = .success(())
@@ -26,6 +27,7 @@ actor MockShoppingListAPI: ShoppingListAPI {
 
     private var fetchSuspends = false
     private var fetchContinuation: CheckedContinuation<Void, Never>?
+    private var fetchStartedContinuations: [CheckedContinuation<Void, Never>] = []
 
     /// Number of times each endpoint has been called.
     private(set) var fetchCallCount = 0
@@ -44,6 +46,17 @@ actor MockShoppingListAPI: ShoppingListAPI {
         fetchContinuation = nil
     }
 
+    /// Block until `fetchShoppingList()` has actually entered the function
+    /// (i.e. fetchCallCount has been incremented). Use instead of
+    /// `Task.yield()` to deterministically order test steps relative to a
+    /// suspended fetch.
+    func waitForFetchStart() async {
+        if fetchCallCount > 0 { return }
+        await withCheckedContinuation { c in
+            fetchStartedContinuations.append(c)
+        }
+    }
+
     func setToggleIngredientResult(_ result: Result<[IngredientItem], Error>) {
         toggleIngredientResult = result
     }
@@ -52,10 +65,22 @@ actor MockShoppingListAPI: ShoppingListAPI {
         addResult = result
     }
 
+    /// Set a queue of per-call results for `addAdditionalItems`. Each call
+    /// pops one result. After the queue is empty, `addResult` is used as
+    /// fallback. Useful when a test issues several `addItem` calls and needs
+    /// each to return a distinct item.
+    func enqueueAddResults(_ results: [Result<[AdditionalItem], Error>]) {
+        addResults.append(contentsOf: results)
+    }
+
     // MARK: - ShoppingListAPI
 
     func fetchShoppingList() async throws -> ShoppingListResponse {
         fetchCallCount += 1
+        // Notify any test that was waiting for the fetch to start.
+        for c in fetchStartedContinuations { c.resume() }
+        fetchStartedContinuations.removeAll()
+
         if fetchSuspends {
             await withCheckedContinuation { c in
                 fetchContinuation = c
@@ -73,6 +98,9 @@ actor MockShoppingListAPI: ShoppingListAPI {
     }
 
     func addAdditionalItems(names: [String]) async throws -> [AdditionalItem] {
+        if !addResults.isEmpty {
+            return try addResults.removeFirst().get()
+        }
         return try addResult.get()
     }
 

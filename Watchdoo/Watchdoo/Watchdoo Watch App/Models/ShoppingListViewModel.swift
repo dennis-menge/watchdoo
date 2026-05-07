@@ -20,6 +20,18 @@ class ShoppingListViewModel: ObservableObject {
     /// server state.
     private var mutationGeneration: Int = 0
 
+    /// Identifies the current configuration (server URL + API key combo).
+    /// A new token is minted every time the configuration is reset, so an
+    /// in-flight mutation that started under the previous configuration can
+    /// detect that fact when it completes and skip persisting state that
+    /// belongs to the wrong account.
+    ///
+    /// Concurrent mutations under the *same* configuration share the same
+    /// token, so they all proceed to write to the cache. The CacheWriter's
+    /// FIFO chain then serializes those writes; the last one's snapshot
+    /// reflects every confirmed mutation up to that point.
+    private var configurationToken = UUID()
+
     init(api: any ShoppingListAPI = APIService.shared) {
         self.api = api
         loadFromCache()
@@ -46,6 +58,7 @@ class ShoppingListViewModel: ObservableObject {
     /// Call when the server URL or API key changes (e.g. new config from the iPhone).
     func resetForConfigurationChange() async {
         mutationGeneration += 1
+        configurationToken = UUID()
         ingredients = []
         additionalItems = []
         recipes = []
@@ -145,7 +158,7 @@ class ShoppingListViewModel: ObservableObject {
 
     func toggleItem(_ item: ShoppingItem) async {
         mutationGeneration += 1
-        let myGen = mutationGeneration
+        let myToken = configurationToken
         switch item {
         case .ingredient(let ingredient):
             // Optimistic update
@@ -158,7 +171,7 @@ class ShoppingListViewModel: ObservableObject {
                     isOwned: !ingredient.isOwned
                 )
                 error = nil
-                guard myGen == mutationGeneration else { return }
+                guard myToken == configurationToken else { return }
                 await saveCurrentToCache()
             } catch {
                 // Revert on failure
@@ -179,7 +192,7 @@ class ShoppingListViewModel: ObservableObject {
                     isOwned: !additional.isOwned
                 )
                 error = nil
-                guard myGen == mutationGeneration else { return }
+                guard myToken == configurationToken else { return }
                 await saveCurrentToCache()
             } catch {
                 if let idx = additionalItems.firstIndex(where: { $0.id == additional.id }) {
@@ -196,12 +209,12 @@ class ShoppingListViewModel: ObservableObject {
     func addItem(name: String) async {
         guard !name.trimmingCharacters(in: .whitespaces).isEmpty else { return }
         mutationGeneration += 1
-        let myGen = mutationGeneration
+        let myToken = configurationToken
         do {
             let newItems = try await api.addAdditionalItems(names: [name])
             additionalItems.append(contentsOf: newItems)
             error = nil
-            guard myGen == mutationGeneration else { return }
+            guard myToken == configurationToken else { return }
             await saveCurrentToCache()
         } catch {
             self.error = error.localizedDescription
@@ -213,12 +226,12 @@ class ShoppingListViewModel: ObservableObject {
 
     func removeAdditionalItem(id: String) async {
         mutationGeneration += 1
-        let myGen = mutationGeneration
+        let myToken = configurationToken
         additionalItems.removeAll { $0.id == id }
         do {
             try await api.removeAdditionalItem(id: id)
             error = nil
-            guard myGen == mutationGeneration else { return }
+            guard myToken == configurationToken else { return }
             await saveCurrentToCache()
         } catch {
             self.error = error.localizedDescription
@@ -228,13 +241,13 @@ class ShoppingListViewModel: ObservableObject {
 
     func removeRecipeIngredients(recipeId: String) async {
         mutationGeneration += 1
-        let myGen = mutationGeneration
+        let myToken = configurationToken
         ingredients.removeAll { $0.recipeId == recipeId }
         recipes.removeAll { $0.id == recipeId }
         do {
             try await api.removeRecipeIngredients(recipeId: recipeId)
             error = nil
-            guard myGen == mutationGeneration else { return }
+            guard myToken == configurationToken else { return }
             await saveCurrentToCache()
         } catch {
             self.error = error.localizedDescription
@@ -244,7 +257,7 @@ class ShoppingListViewModel: ObservableObject {
 
     func clearShoppingList() async {
         mutationGeneration += 1
-        let myGen = mutationGeneration
+        let myToken = configurationToken
         // Snapshot for rollback on failure.
         let prevIngredients = ingredients
         let prevAdditional = additionalItems
@@ -257,7 +270,7 @@ class ShoppingListViewModel: ObservableObject {
         do {
             try await api.clearShoppingList()
             error = nil
-            guard myGen == mutationGeneration else { return }
+            guard myToken == configurationToken else { return }
             await saveCurrentToCache()
         } catch {
             ingredients = prevIngredients
