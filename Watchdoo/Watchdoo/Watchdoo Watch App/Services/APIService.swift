@@ -1,7 +1,19 @@
 import Foundation
 
+/// Subset of the backend API used by ShoppingListViewModel.
+/// Extracted as a protocol so tests can inject a controllable double.
+protocol ShoppingListAPI: Sendable {
+    func fetchShoppingList() async throws -> ShoppingListResponse
+    func toggleIngredientOwnership(id: String, isOwned: Bool) async throws -> [IngredientItem]
+    func toggleAdditionalItemOwnership(id: String, isOwned: Bool) async throws -> [AdditionalItem]
+    func addAdditionalItems(names: [String]) async throws -> [AdditionalItem]
+    func removeAdditionalItem(id: String) async throws
+    func removeRecipeIngredients(recipeId: String) async throws
+    func clearShoppingList() async throws
+}
+
 /// Manages communication with the Watchdoo backend.
-actor APIService {
+actor APIService: ShoppingListAPI {
     static let shared = APIService()
 
     private var baseURL: String {

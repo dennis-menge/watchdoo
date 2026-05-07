@@ -57,3 +57,55 @@ enum ShoppingListCache {
         try? FileManager.default.removeItem(at: url)
     }
 }
+
+/// Serializes all cache writes through a single FIFO chain.
+///
+/// Why this exists: ShoppingListViewModel runs on @MainActor and calls into
+/// the cache after every fetch and every mutation. Naively dispatching each
+/// write via `Task.detached` produces no ordering guarantees:
+///   * two rapid mutations could write out of order, leaving an older
+///     snapshot on disk;
+///   * `clear()` from a configuration change could race with a still-pending
+///     `save()` from the previous configuration, recreating the cache after
+///     the clear was supposed to wipe it.
+///
+/// Each write is enqueued as a detached Task that first awaits the previous
+/// task's completion, guaranteeing strict FIFO execution while keeping disk
+/// I/O off both the @MainActor and this actor's executor.
+///
+/// `save` and `clear` are `async` and await their own task, so when these
+/// methods return the data has actually hit disk — providing the durability
+/// the cache-after-mutation feature relies on (a quick app termination
+/// after the await returns will still preserve the snapshot).
+actor CacheWriter {
+    static let shared = CacheWriter()
+    private init() {}
+
+    private var pending: Task<Void, Never>?
+
+    func save(_ response: ShoppingListResponse, serverURL: String) async {
+        let previous = pending
+        let task = Task.detached(priority: .utility) {
+            await previous?.value
+            ShoppingListCache.save(response, serverURL: serverURL)
+        }
+        pending = task
+        await task.value
+    }
+
+    func clear() async {
+        let previous = pending
+        let task = Task.detached(priority: .utility) {
+            await previous?.value
+            ShoppingListCache.clear()
+        }
+        pending = task
+        await task.value
+    }
+
+    /// Wait for all pending writes to complete. Useful for tests and for
+    /// explicit barriers before reads that must observe all prior writes.
+    func drain() async {
+        await pending?.value
+    }
+}

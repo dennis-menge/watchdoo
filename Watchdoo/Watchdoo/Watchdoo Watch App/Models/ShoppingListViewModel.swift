@@ -12,9 +12,28 @@ class ShoppingListViewModel: ObservableObject {
     @Published var error: String?
     @Published var lastUpdated: Date?
 
-    private let api = APIService.shared
+    private let api: any ShoppingListAPI
 
-    init() {
+    /// Incremented on every local mutation. Used to discard stale fetch
+    /// responses that completed after a user mutation — without this, an
+    /// in-flight fetch could clobber an optimistic update with pre-mutation
+    /// server state.
+    private var mutationGeneration: Int = 0
+
+    /// Identifies the current configuration (server URL + API key combo).
+    /// A new token is minted every time the configuration is reset, so an
+    /// in-flight mutation that started under the previous configuration can
+    /// detect that fact when it completes and skip persisting state that
+    /// belongs to the wrong account.
+    ///
+    /// Concurrent mutations under the *same* configuration share the same
+    /// token, so they all proceed to write to the cache. The CacheWriter's
+    /// FIFO chain then serializes those writes; the last one's snapshot
+    /// reflects every confirmed mutation up to that point.
+    private var configurationToken = UUID()
+
+    init(api: any ShoppingListAPI = APIService.shared) {
+        self.api = api
         loadFromCache()
     }
 
@@ -37,13 +56,38 @@ class ShoppingListViewModel: ObservableObject {
 
     /// Reset all in-memory + cached state.
     /// Call when the server URL or API key changes (e.g. new config from the iPhone).
-    func resetForConfigurationChange() {
+    func resetForConfigurationChange() async {
+        mutationGeneration += 1
+        configurationToken = UUID()
         ingredients = []
         additionalItems = []
         recipes = []
         lastUpdated = nil
         error = nil
-        ShoppingListCache.clear()
+        // An in-flight fetch's deferred isLoading=false will still run when
+        // its response (eventually) arrives, but we set it now so the UI
+        // doesn't stay stuck on ProgressView while a stale cold-start fetch
+        // is still pending against the old backend.
+        isLoading = false
+        await CacheWriter.shared.clear()
+    }
+
+    /// Persist the current in-memory state to disk.
+    /// Called after every successful mutation so that a relaunch shows the
+    /// latest user-confirmed state, not stale pre-mutation data.
+    ///
+    /// Writes are enqueued on CacheWriter (a serializing actor) so disk
+    /// I/O stays off @MainActor and write ordering is deterministic across
+    /// rapid mutations and concurrent fetches.
+    private func saveCurrentToCache() async {
+        let response = ShoppingListResponse(
+            ingredients: ingredients,
+            additionalItems: additionalItems,
+            recipes: recipes
+        )
+        let url = currentServerURL
+        await CacheWriter.shared.save(response, serverURL: url)
+        lastUpdated = Date()
     }
 
     // MARK: - Grouped Data
@@ -82,6 +126,7 @@ class ShoppingListViewModel: ObservableObject {
     // MARK: - Data Fetching
 
     func fetchShoppingList() async {
+        let myGeneration = mutationGeneration
         isLoading = true
         let hadCache = !ingredients.isEmpty || !additionalItems.isEmpty || !recipes.isEmpty
         if !hadCache {
@@ -91,12 +136,18 @@ class ShoppingListViewModel: ObservableObject {
 
         do {
             let response = try await api.fetchShoppingList()
+            // Discard stale responses: the user mutated state while this
+            // fetch was in flight, so its body no longer reflects what the
+            // user expects to see. Local state is already authoritative;
+            // the next fetch will pick up the post-mutation server state.
+            guard myGeneration == mutationGeneration else { return }
             ingredients = response.ingredients
             additionalItems = response.additionalItems
             recipes = response.recipes
             lastUpdated = Date()
             error = nil
-            ShoppingListCache.save(response, serverURL: currentServerURL)
+            let url = currentServerURL
+            await CacheWriter.shared.save(response, serverURL: url)
         } catch {
             // Keep cached data visible; only surface the error message.
             self.error = error.localizedDescription
@@ -106,6 +157,8 @@ class ShoppingListViewModel: ObservableObject {
     // MARK: - Toggle Ownership
 
     func toggleItem(_ item: ShoppingItem) async {
+        mutationGeneration += 1
+        let myToken = configurationToken
         switch item {
         case .ingredient(let ingredient):
             // Optimistic update
@@ -117,12 +170,16 @@ class ShoppingListViewModel: ObservableObject {
                     id: ingredient.id,
                     isOwned: !ingredient.isOwned
                 )
+                error = nil
+                guard myToken == configurationToken else { return }
+                await saveCurrentToCache()
             } catch {
                 // Revert on failure
                 if let idx = ingredients.firstIndex(where: { $0.id == ingredient.id }) {
                     ingredients[idx].isOwned = ingredient.isOwned
                 }
                 self.error = error.localizedDescription
+                await fetchShoppingList() // resync — mutation didn't reach server
             }
 
         case .additional(let additional):
@@ -134,11 +191,15 @@ class ShoppingListViewModel: ObservableObject {
                     id: additional.id,
                     isOwned: !additional.isOwned
                 )
+                error = nil
+                guard myToken == configurationToken else { return }
+                await saveCurrentToCache()
             } catch {
                 if let idx = additionalItems.firstIndex(where: { $0.id == additional.id }) {
                     additionalItems[idx].isOwned = additional.isOwned
                 }
                 self.error = error.localizedDescription
+                await fetchShoppingList() // resync
             }
         }
     }
@@ -147,20 +208,31 @@ class ShoppingListViewModel: ObservableObject {
 
     func addItem(name: String) async {
         guard !name.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+        mutationGeneration += 1
+        let myToken = configurationToken
         do {
             let newItems = try await api.addAdditionalItems(names: [name])
             additionalItems.append(contentsOf: newItems)
+            error = nil
+            guard myToken == configurationToken else { return }
+            await saveCurrentToCache()
         } catch {
             self.error = error.localizedDescription
+            await fetchShoppingList() // resync
         }
     }
 
     // MARK: - Remove Items
 
     func removeAdditionalItem(id: String) async {
+        mutationGeneration += 1
+        let myToken = configurationToken
         additionalItems.removeAll { $0.id == id }
         do {
             try await api.removeAdditionalItem(id: id)
+            error = nil
+            guard myToken == configurationToken else { return }
+            await saveCurrentToCache()
         } catch {
             self.error = error.localizedDescription
             await fetchShoppingList() // resync
@@ -168,10 +240,15 @@ class ShoppingListViewModel: ObservableObject {
     }
 
     func removeRecipeIngredients(recipeId: String) async {
+        mutationGeneration += 1
+        let myToken = configurationToken
         ingredients.removeAll { $0.recipeId == recipeId }
         recipes.removeAll { $0.id == recipeId }
         do {
             try await api.removeRecipeIngredients(recipeId: recipeId)
+            error = nil
+            guard myToken == configurationToken else { return }
+            await saveCurrentToCache()
         } catch {
             self.error = error.localizedDescription
             await fetchShoppingList()
@@ -179,6 +256,8 @@ class ShoppingListViewModel: ObservableObject {
     }
 
     func clearShoppingList() async {
+        mutationGeneration += 1
+        let myToken = configurationToken
         // Snapshot for rollback on failure.
         let prevIngredients = ingredients
         let prevAdditional = additionalItems
@@ -190,6 +269,9 @@ class ShoppingListViewModel: ObservableObject {
 
         do {
             try await api.clearShoppingList()
+            error = nil
+            guard myToken == configurationToken else { return }
+            await saveCurrentToCache()
         } catch {
             ingredients = prevIngredients
             additionalItems = prevAdditional

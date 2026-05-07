@@ -34,15 +34,19 @@ struct ContentView: View {
                 }
             }
             .onChange(of: serverURL) {
-                viewModel.resetForConfigurationChange()
-                if isConfigured {
-                    Task { await viewModel.fetchShoppingList() }
+                Task {
+                    await viewModel.resetForConfigurationChange()
+                    if isConfigured {
+                        await viewModel.fetchShoppingList()
+                    }
                 }
             }
             .onChange(of: apiKey) {
-                viewModel.resetForConfigurationChange()
-                if isConfigured {
-                    Task { await viewModel.fetchShoppingList() }
+                Task {
+                    await viewModel.resetForConfigurationChange()
+                    if isConfigured {
+                        await viewModel.fetchShoppingList()
+                    }
                 }
             }
             .onChange(of: scenePhase) { _, newPhase in
