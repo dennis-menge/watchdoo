@@ -27,8 +27,15 @@ class CookidooService:
     async def _ensure_session(self) -> Cookidoo:
         """Ensure we have an active aiohttp session and logged-in Cookidoo client."""
         if self._session is None or self._session.closed:
-            self._session = aiohttp.ClientSession()
+            # CookieJar(unsafe=True) is required by cookidoo-api 0.17.1+ so the
+            # OAuth2 browser-login redirect chain can carry cookies across the
+            # cookidoo.{tld}, ciam.prod.cookidoo... and eu.login.vorwerk.com
+            # domains.
+            self._session = aiohttp.ClientSession(
+                cookie_jar=aiohttp.CookieJar(unsafe=True)
+            )
             self._logged_in = False
+            self._cookidoo = None
 
         if self._cookidoo is None or not self._logged_in:
             localizations = await get_localization_options(
@@ -133,10 +140,18 @@ class CookidooService:
         logger.info("Shopping list cleared")
 
     async def refresh_token(self) -> None:
-        """Manually refresh the Cookidoo auth token."""
-        cookidoo = await self._ensure_session()
-        await cookidoo.refresh_token()
-        logger.info("Cookidoo token refreshed")
+        """Force a fresh Cookidoo login.
+
+        cookidoo-api 0.17.1+ uses an OAuth2 proxy that refreshes access tokens
+        automatically, so an explicit refresh endpoint no longer exists on the
+        library. We keep this method on the service so callers (e.g. the
+        ``/auth/refresh`` endpoint) can force a fresh browser-login flow when
+        something seems off — for example, after the user re-installs the
+        Watch app or after the long-lived session cookie has expired.
+        """
+        self._logged_in = False
+        await self._ensure_session()
+        logger.info("Cookidoo session re-established")
 
     async def close(self) -> None:
         """Close the aiohttp session."""
