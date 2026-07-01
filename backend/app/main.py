@@ -19,8 +19,13 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Manage application lifecycle – cleanup on shutdown."""
+    """Manage application lifecycle – login on startup, cleanup on shutdown."""
     logger.info("Watchdoo backend starting up")
+    try:
+        await cookidoo_service.login()
+        logger.info("Cookidoo session ready")
+    except Exception:
+        logger.exception("Cookidoo login failed at startup – will retry on first request")
     yield
     logger.info("Shutting down, closing Cookidoo session")
     await cookidoo_service.close()
@@ -39,6 +44,16 @@ app.include_router(auth.router)
 
 @app.get("/api/v1/health", response_model=HealthResponse)
 async def health_check():
-    """Health check endpoint (no auth required)."""
-    connected = cookidoo_service._logged_in
+    """Health check endpoint (no auth required).
+
+    Attempts to ensure a valid Cookidoo session so the reported status
+    reflects reality rather than a potentially stale in-memory flag.
+    On cold-start (before any login), this will trigger the OAuth2 flow.
+    If already logged in, this is a cheap no-op.
+    """
+    try:
+        await cookidoo_service.login()
+        connected = True
+    except Exception:
+        connected = False
     return HealthResponse(status="ok", cookidoo_connected=connected)
