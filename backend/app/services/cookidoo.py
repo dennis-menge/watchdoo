@@ -139,6 +139,15 @@ class CookidooService:
         await self._with_retry(cookidoo.clear_shopping_list)
         logger.info("Shopping list cleared")
 
+    async def login(self) -> None:
+        """Ensure the service has a valid, logged-in Cookidoo session.
+
+        Idempotent: if already logged in this is a no-op (just returns the
+        existing client). Call this at startup or from the health endpoint to
+        eagerly establish a session.
+        """
+        await self._ensure_session()
+
     async def refresh_token(self) -> None:
         """Force a fresh Cookidoo login.
 
