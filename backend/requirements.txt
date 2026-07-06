@@ -3,7 +3,7 @@ fastapi>=0.138.2
 uvicorn[standard]>=0.49.0
 python-dotenv>=1.2.2
 pydantic>=2.13.4
-pydantic-settings>=2.14.1
+pydantic-settings>=2.14.2
 aiohttp>=3.14.1
 
 # Dev/Test dependencies
