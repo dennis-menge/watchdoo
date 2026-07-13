@@ -1,5 +1,5 @@
 cookidoo-api>=0.17.2
-fastapi>=0.138.2
+fastapi>=0.139.0
 uvicorn[standard]>=0.51.0
 python-dotenv>=1.2.2
 pydantic>=2.13.4
