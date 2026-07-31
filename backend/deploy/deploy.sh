@@ -179,6 +179,23 @@ if az containerapp show -n "$CONTAINER_APP_NAME" -g "$RESOURCE_GROUP" >/dev/null
         --resource-group "$RESOURCE_GROUP" \
         --revision "$LATEST_REV" \
         --output none
+
+    # In "Multiple" revisions mode a new revision gets 0% of traffic unless it is
+    # routed explicitly, so updating the image alone is a silent no-op: the app
+    # keeps serving whichever revision the weights still point at. Send all
+    # traffic to the revision we just deployed.
+    REVISION_MODE=$(az containerapp show \
+        --name "$CONTAINER_APP_NAME" \
+        --resource-group "$RESOURCE_GROUP" \
+        --query "properties.configuration.activeRevisionsMode" -o tsv)
+    if [ "$(printf '%s' "$REVISION_MODE" | tr '[:upper:]' '[:lower:]')" = "multiple" ]; then
+        echo "🔀 Routing 100% of traffic to $LATEST_REV"
+        az containerapp ingress traffic set \
+            --name "$CONTAINER_APP_NAME" \
+            --resource-group "$RESOURCE_GROUP" \
+            --revision-weight "$LATEST_REV=100" \
+            --output none
+    fi
 else
     echo "🚀 Creating container app: $CONTAINER_APP_NAME"
     az containerapp create \
