@@ -95,10 +95,52 @@ The script prints the backend URL on completion.
 | `POST`   | `/api/v1/shopping-list/additional-items`            | Add custom items                  |
 | `PUT`    | `/api/v1/shopping-list/additional-items`            | Edit custom items                 |
 | `DELETE` | `/api/v1/shopping-list/additional-items/{id}`       | Delete a custom item              |
+| `POST`   | `/api/v1/shopping-list/recipes`                     | Add whole dishes to the list      |
 | `DELETE` | `/api/v1/shopping-list/recipes/{recipe_id}`         | Remove a recipe's ingredients     |
+| `GET`    | `/api/v1/recipes/search?q=…`                        | Search the public recipe catalogue|
+| `GET`    | `/api/v1/recipes/collections`                       | Saved recipe collections          |
+| `GET`    | `/api/v1/recipes/{recipe_id}`                       | Recipe metadata                   |
 | `POST`   | `/api/v1/auth/refresh`                              | Refresh the Cookidoo token        |
 
 All endpoints (except `/health`) require the `X-API-Key` header.
+
+### Putting whole dishes on the list
+
+Instead of pushing loose text lines via `additional-items`, you can add a dish by
+its recipe id and let Cookidoo supply the ingredients, quantities and the recipe
+grouping. Search the public catalogue first — it needs no subscription and
+returns rating and cooking time, so an automation can pick well-rated dishes and
+honour constraints like "under 25 minutes":
+
+```bash
+# Find a dish
+curl -H "X-API-Key: your-key" \
+  "http://localhost:8000/api/v1/recipes/search?q=lasagne&limit=3"
+# → [{"id":"r364443","name":"Lasagne","rating":4.79,
+#     "number_of_ratings":19929,"total_time":7200,"image":"…"}, …]
+
+# Put it on the shopping list
+curl -X POST -H "X-API-Key: your-key" -H "Content-Type: application/json" \
+  -d '{"recipe_ids": ["r364443"]}' \
+  http://localhost:8000/api/v1/shopping-list/recipes
+# → {"added_recipe_ids":["r364443"], "skipped_recipe_ids":[],
+#    "added_ingredients":[{"name":"Parmesan","description":"130 g",
+#                          "recipe_name":"Lasagne", …}, …]}
+
+# Remove it again (removes every copy of that recipe)
+curl -X DELETE -H "X-API-Key: your-key" \
+  http://localhost:8000/api/v1/shopping-list/recipes/r364443
+```
+
+Cookidoo does **not** deduplicate — adding the same recipe twice puts every
+ingredient on the list twice. A recipe is therefore skipped when it is already on
+the list *or* repeated within the same request, and reported in
+`skipped_recipe_ids`. Repeating a call is safe: a cron job that runs twice will
+not double your week's shopping.
+
+`"allow_duplicates": true` is the single, deliberate way to ask for a double
+portion. For user-created recipes pass `"custom": true`, which routes to
+Cookidoo's separate custom-recipe endpoint.
 
 ## Project Layout
 
