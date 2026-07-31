@@ -2,6 +2,33 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with this repository.
 
+## ⚠️ Git workflow rules (read first)
+
+**Never commit or push to `main` directly. Never push without explicit confirmation from the user.**
+
+For every change, even small ones:
+
+1. Create a feature branch off the latest `main`:
+   `git switch -c feat/<short-topic>` (or `fix/...`, `chore/...`, `docs/...`)
+2. Make commits on that branch only.
+3. **Ask the user** before pushing — show what you changed and what the commit message will be.
+4. Once the user confirms, push the branch and open a Pull Request via `gh pr create`. Default to `--draft` unless the user says otherwise. Fill in title and body from the commit messages.
+5. Never use `--admin` to bypass branch protection. Never `git push origin main`. Never `git commit` directly on `main`.
+6. After the PR is opened, leave merging to the user (or do it only on explicit instruction). Prefer squash merge if asked.
+7. After a PR is merged, delete the local branch and `git switch main && git pull` before starting the next change.
+
+If you have already started editing files on `main` by mistake, stop, create a branch from the current state with `git switch -c <branch>`, then reset `main` back to `origin/main` before continuing.
+
+Things that are still allowed without asking:
+- Reading files, running tests, builds, linters, deploys to Azure for verification
+- Editing files in the working tree (the user reviews before commit)
+- Committing on a feature branch (but not pushing)
+
+Things that always require explicit user confirmation:
+- `git push` of any kind
+- `gh pr merge`
+- Force pushes, branch deletions on the remote, tag pushes
+
 ## Project Overview
 
 Watchdoo is a standalone Apple Watch app that displays and manages the Cookidoo (Thermomix/Vorwerk) shopping list. It consists of three parts:
@@ -74,6 +101,32 @@ All config via environment variables (see `.env.example`):
 The cookidoo-api library returns ingredient ownership status (`is_owned`) only on the **flat ingredient list**, while the **recipe-grouped ingredients** carry the recipe association. Recipe ingredients always have `is_owned=False` from the library directly.
 
 `shopping_list.py` builds a `(name, description) → is_owned` lookup dict from the flat list and then injects the correct `is_owned` value into recipe ingredients before returning them. Without this, the "Gerichte" view on the Watch would never show checked items.
+
+### Important: Adding whole recipes
+
+`POST /api/v1/shopping-list/recipes` is the counterpart to the existing `DELETE`. Verified behaviour against the live API (2026-07-31):
+
+- **Any public catalogue id works** — no subscription restriction. An id straight out of `/recipes/search` can be added.
+- **Cookidoo does not deduplicate.** Adding the same recipe twice puts every ingredient on the list twice and lists the recipe twice under the same id. The endpoint therefore skips a recipe that is already on the list *or* repeated within the same request (`skipped_recipe_ids`), so a re-run of a cron job cannot double a week's shopping. `allow_duplicates: true` is the single, deliberate way to ask for a double portion.
+- `DELETE /shopping-list/recipes/{id}` removes **every** copy of that recipe.
+- The library **discards the recipe association** when parsing the add response (`CookidooIngredientItem` is only `id/name/description/is_owned`). The endpoint re-reads `get_shopping_list_recipes()` afterwards and matches on `(name, description)` to fill in `recipe_id`/`recipe_name`. There is nothing better to join on: the add response and the flat list use shopping-list item ULIDs, while recipe-grouped ingredients carry catalogue ids (`com.vorwerk.ingredients.Ingredient-rpf-10`) — the two namespaces do not overlap at all.
+- **`(name, description)` is not unique across recipes.** Two dishes added in one request can both call for `Lasagneplatten`/`250 g`, and the returned items are indistinguishable. Such ingredients are left with `recipe_id`/`recipe_name` unset rather than attributed to an arbitrary recipe. The same caveat applies to the ownership cross-reference above.
+- Custom (user-created) recipes look identical but need `add_ingredient_items_for_custom_recipes` — hence the `custom` flag on the request.
+
+### Important: The recipe search bypasses cookidoo-api
+
+`cookidoo-api` has no search capability at all. `CookidooService.search_recipes` therefore issues a direct `aiohttp` request against Cookidoo's own web search:
+
+```
+GET https://cookidoo.{tld}/search/{language}?context=recipes&query=…&page=…
+Accept: application/json
+```
+
+Without the `Accept: application/json` header only a JavaScript shell comes back. The endpoint is **undocumented and unauthenticated** — it serves the public catalogue, so no login is needed and a subscription does not change the results. It returns 20 hits per page with `id`, `title`, `rating`, `numberOfRatings`, `totalTime` and `image`.
+
+Because it is undocumented, keep it encapsulated in that one service method — a Vorwerk-side change should only require fixing one place. `additional-items` remains the fallback if it breaks.
+
+Caveats: a `categories=` filter appears to be ignored (filter client-side on `total_time`/`rating` instead), there is no total-result count, and `image` URLs still contain Cookidoo's `{transformation}` placeholder which callers must substitute.
 
 ### Known Limitations
 - **Shopping categories** (`shoppingCategory_ref`) are not exposed by `cookidoo-api`. The Watch app currently shows a flat sorted list (unchecked first, then checked) instead of grouping by category.
@@ -170,7 +223,11 @@ All endpoints (except health) require `X-API-Key` header.
 | POST | `/api/v1/shopping-list/additional-items` | Add custom items |
 | PUT | `/api/v1/shopping-list/additional-items` | Edit custom items |
 | DELETE | `/api/v1/shopping-list/additional-items/{id}` | Remove custom item |
+| POST | `/api/v1/shopping-list/recipes` | Add whole dishes (recipe ingredients) |
 | DELETE | `/api/v1/shopping-list/recipes/{recipe_id}` | Remove recipe ingredients |
+| GET | `/api/v1/recipes/search?q=…` | Search the public recipe catalogue |
+| GET | `/api/v1/recipes/collections` | Saved recipe collections |
+| GET | `/api/v1/recipes/{recipe_id}` | Recipe metadata |
 | POST | `/api/v1/auth/refresh` | Force token refresh |
 
 ## Development Tips
