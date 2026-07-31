@@ -151,6 +151,85 @@ async def test_add_recipes_success(client, mock_cookidoo):
 
 
 @pytest.mark.anyio
+async def test_add_recipes_leaves_ambiguous_ingredients_unattributed(
+    client, mock_cookidoo
+):
+    """An ingredient claimed by two recipes must not be attributed to either.
+
+    Matching can only go through (name, description) - the add response and the
+    recipe groups use different id namespaces - and that key is not unique. Two
+    dishes can both call for "Lasagneplatten"/"250 g", in which case guessing
+    would attribute one of them to the wrong recipe.
+    """
+    shared = CookidooIngredient(
+        id="cat-9", name="Lasagneplatten", description="250 g"
+    )
+    lasagne = CookidooShoppingRecipe(
+        id="r364443",
+        name="Lasagne",
+        ingredients=[
+            CookidooIngredient(id="cat-1", name="Parmesan", description="130 g"),
+            shared,
+        ],
+        thumbnail=None,
+        image=None,
+        url="https://cookidoo.de/recipes/r364443",
+    )
+    bolognese = CookidooShoppingRecipe(
+        id="r47865",
+        name="Lasagne Bolognese",
+        ingredients=[shared],
+        thumbnail=None,
+        image=None,
+        url="https://cookidoo.de/recipes/r47865",
+    )
+    added_items = [
+        CookidooIngredientItem(
+            id="item-1", name="Parmesan", description="130 g", is_owned=False
+        ),
+        # one copy per recipe, indistinguishable by name+description
+        CookidooIngredientItem(
+            id="item-2", name="Lasagneplatten", description="250 g", is_owned=False
+        ),
+        CookidooIngredientItem(
+            id="item-3", name="Lasagneplatten", description="250 g", is_owned=False
+        ),
+    ]
+
+    with (
+        patch.object(
+            mock_cookidoo,
+            "get_shopping_list_recipes",
+            new_callable=AsyncMock,
+            side_effect=[[], [lasagne, bolognese]],
+        ),
+        patch.object(
+            mock_cookidoo,
+            "add_ingredient_items_for_recipes",
+            new_callable=AsyncMock,
+            return_value=added_items,
+        ),
+    ):
+        response = await client.post(
+            "/api/v1/shopping-list/recipes",
+            json={"recipe_ids": ["r364443", "r47865"]},
+            headers=AUTH_HEADER,
+        )
+
+    assert response.status_code == 200
+    by_id = {i["id"]: i for i in response.json()["added_ingredients"]}
+
+    # Unambiguous: only Lasagne lists Parmesan.
+    assert by_id["item-1"]["recipe_id"] == "r364443"
+    assert by_id["item-1"]["recipe_name"] == "Lasagne"
+
+    # Ambiguous: both recipes list it, so neither is claimed.
+    for item_id in ("item-2", "item-3"):
+        assert by_id[item_id]["recipe_id"] is None
+        assert by_id[item_id]["recipe_name"] is None
+
+
+@pytest.mark.anyio
 async def test_add_recipes_skips_duplicates_by_default(client, mock_cookidoo):
     """Cookidoo does not deduplicate, so an already-present recipe is skipped."""
     with (

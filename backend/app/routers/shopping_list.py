@@ -1,6 +1,7 @@
 """Shopping list API endpoints."""
 
 import logging
+from collections import defaultdict
 from typing import Any
 
 from cookidoo_api.types import CookidooAdditionalItem, CookidooIngredientItem
@@ -280,15 +281,26 @@ async def add_recipes(request: AddRecipesRequest):
 
         # The library drops the recipe association while parsing the add
         # response, so re-read the list to attach recipe_id/recipe_name.
-        recipe_lookup: dict[tuple[str, str], tuple[str, str]] = {}
+        #
+        # Matching has to go through (name, description): the add response and
+        # the recipe groups use different id namespaces (shopping-list item
+        # ULIDs vs. catalogue ids like "com.vorwerk.ingredients.Ingredient-rpf-10"),
+        # so there is nothing to join on directly.
+        #
+        # That key is not unique across recipes - two dishes can both call for
+        # "Lasagneplatten"/"250 g". Collect every candidate and only enrich when
+        # exactly one recipe claims the ingredient; otherwise leave the fields
+        # unset rather than guessing a wrong recipe.
+        recipe_candidates: dict[tuple[str, str], set[tuple[str, str]]] = defaultdict(
+            set
+        )
         try:
             for recipe in await cookidoo_service.get_shopping_list_recipes():
                 if recipe.id not in recipe_ids:
                     continue
                 for ingredient in recipe.ingredients:
-                    recipe_lookup[(ingredient.name, ingredient.description)] = (
-                        recipe.id,
-                        recipe.name,
+                    recipe_candidates[(ingredient.name, ingredient.description)].add(
+                        (recipe.id, recipe.name)
                     )
         except Exception:
             logger.warning(
@@ -297,8 +309,9 @@ async def add_recipes(request: AddRecipesRequest):
 
         added_ingredients = []
         for item in added:
-            recipe_id, recipe_name = recipe_lookup.get(
-                (item.name, item.description), (None, None)
+            owners = recipe_candidates.get((item.name, item.description), set())
+            recipe_id, recipe_name = (
+                next(iter(owners)) if len(owners) == 1 else (None, None)
             )
             added_ingredients.append(
                 IngredientItemResponse(
