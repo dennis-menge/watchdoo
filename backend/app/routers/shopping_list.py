@@ -21,7 +21,6 @@ from app.models import (
     RecipeDetailsResponse,
     RecipeIngredientResponse,
     RecipeSearchResultResponse,
-    RemoveRecipeRequest,
     ShoppingListResponse,
     ShoppingRecipeResponse,
 )

@@ -2,8 +2,6 @@
 
 import pytest
 
-from tests.conftest import AUTH_HEADER
-
 
 @pytest.mark.anyio
 async def test_valid_api_key(client):
