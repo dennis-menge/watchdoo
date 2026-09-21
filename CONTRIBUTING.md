@@ -21,7 +21,7 @@ See the [README](README.md#projektstruktur) for the layout. In short:
 cd backend
 python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 cp .env.example .env  # then fill in your credentials
 
 # Run locally
@@ -97,11 +97,15 @@ Watchdoo automates routine dependency maintenance:
   query suite. Findings show up under the repo's *Security → Code scanning*.
 - **Trivy** scans the built backend container image on every backend CI
   run and uploads SARIF results to *Security → Code scanning* under
-  category `trivy-image`. Only fixable HIGH/CRITICAL findings are
-  reported to keep the noise down.
+  category `trivy-image`. All fixable severities are reported; a separate
+  gate rejects fixable HIGH/CRITICAL findings.
 - **Scheduled rebuild**: the backend workflow runs Mondays 04:00 UTC
-  even without code changes so base-image security patches flow through
-  without manual action.
+  even without code changes to check fresh base-image security patches.
+  This does not deploy production: deployment remains a separate local
+  Azure ACR build and image-only Container App revision update.
+- Runtime dependencies are separate from test dependencies. `cookidoo-api`
+  is pinned because its pre-1.0 models can change between minor versions;
+  update its test fixtures with each reviewed upgrade.
 
 If you intentionally need to pin a vulnerable version (e.g. waiting for
 an upstream fix), document the reason in the PR/commit and revisit when

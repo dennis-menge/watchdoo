@@ -74,6 +74,7 @@ RECIPE_DETAILS = CookidooShoppingRecipeDetails(
     active_time=1800,
     total_time=7200,
     nutrition_groups=[],
+    step_groups=[],
 )
 
 CUSTOM_COLLECTIONS = [

@@ -28,23 +28,24 @@ jobs:
         working-directory: backend
 
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ['3.12', '3.13']
+        python-version: ['3.12', '3.13', '3.14']
 
     steps:
       - uses: actions/checkout@v7
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
           cache: 'pip'
-          cache-dependency-path: backend/requirements.txt
+          cache-dependency-path: backend/requirements*.txt
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
 
       - name: Run tests
         env:
@@ -63,7 +64,14 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Build Docker image
-        run: docker build -t watchdoo-backend:ci ./backend
+        run: docker build --pull --no-cache -t watchdoo-backend:ci ./backend
+
+      - name: Smoke-test production image without network or credentials
+        run: |
+          docker run --rm --network none --entrypoint python \
+            -e COOKIDOO_EMAIL=fixture@example.invalid -e COOKIDOO_PASSWORD=fixture \
+            -e API_KEY=fixture \
+            watchdoo-backend:ci -c 'import importlib.util, os; from app.main import app; assert os.getuid() != 0; assert app.title == "Watchdoo API"; assert importlib.util.find_spec("pip") is None; assert importlib.util.find_spec("pytest") is None; print("production import/non-root checks passed")'
 
       - name: Scan image with Trivy
         uses: aquasecurity/trivy-action@v0.36.0
@@ -71,7 +79,7 @@ jobs:
           image-ref: 'watchdoo-backend:ci'
           format: 'sarif'
           output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH'
+          severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
           ignore-unfixed: true
           exit-code: '0'   # don't fail the build, just report
 
@@ -81,3 +89,12 @@ jobs:
         with:
           sarif_file: 'trivy-results.sarif'
           category: 'trivy-image'
+
+      - name: Block fixable high and critical vulnerabilities
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: 'watchdoo-backend:ci'
+          format: 'table'
+          severity: 'CRITICAL,HIGH'
+          ignore-unfixed: true
+          exit-code: '1'

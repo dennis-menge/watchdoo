@@ -5,10 +5,12 @@ on:
     branches: [main]
     paths:
       - 'Watchdoo/**'
+      - 'scripts/test_keychain.swift'
       - '.github/workflows/watch.yml'
   pull_request:
     paths:
       - 'Watchdoo/**'
+      - 'scripts/test_keychain.swift'
       - '.github/workflows/watch.yml'
 
 jobs:
@@ -24,6 +26,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
+
+      - name: Test Keychain storage and migration
+        run: |
+          swiftc Watchdoo/Watchdoo/Shared/APIKeyStore.swift scripts/test_keychain.swift -o "$RUNNER_TEMP/test-keychain"
+          "$RUNNER_TEMP/test-keychain"
 
       - name: Show Xcode and SDKs
         run: |
