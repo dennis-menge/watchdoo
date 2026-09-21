@@ -66,6 +66,13 @@ jobs:
       - name: Build Docker image
         run: docker build --pull --no-cache -t watchdoo-backend:ci ./backend
 
+      - name: Smoke-test production image without network or credentials
+        run: |
+          docker run --rm --network none --entrypoint python \
+            -e COOKIDOO_EMAIL=fixture@example.invalid -e COOKIDOO_PASSWORD=fixture \
+            -e API_KEY=fixture \
+            watchdoo-backend:ci -c 'import importlib.util, os; from app.main import app; assert os.getuid() != 0; assert app.title == "Watchdoo API"; assert importlib.util.find_spec("pip") is None; assert importlib.util.find_spec("pytest") is None; print("production import/non-root checks passed")'
+
       - name: Scan image with Trivy
         uses: aquasecurity/trivy-action@v0.36.0
         with:

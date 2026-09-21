@@ -8,7 +8,12 @@ RUN apt-get update && apt-get upgrade -y \
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip setuptools \
-    && pip install --no-cache-dir -r requirements.txt
+    && pip install --no-cache-dir -r requirements.txt \
+    && pip check \
+    && pip uninstall -y setuptools pip \
+    && python -c "import ensurepip, pathlib, shutil; shutil.rmtree(pathlib.Path(ensurepip.__file__).parent)"
+# Runtime uses installed application packages, not pip/setuptools or ensurepip's
+# bundled installer wheels (which otherwise retain old vendored dependencies).
 
 COPY app/ app/
 
