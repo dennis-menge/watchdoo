@@ -7,9 +7,16 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
     static let shared = WatchConnectivityManager()
 
     @Published var receivedConfig = false
+    @Published var configurationRevision = 0
+    @Published var configurationError: String?
 
     override init() {
         super.init()
+        do {
+            _ = try APIKeyStore.migrate()
+        } catch {
+            configurationError = error.localizedDescription
+        }
         if WCSession.isSupported() {
             let session = WCSession.default
             session.delegate = self
@@ -30,9 +37,17 @@ class WatchConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
               let apiKey = userInfo["apiKey"] as? String else { return }
 
         DispatchQueue.main.async {
+            do {
+                try APIKeyStore.save(apiKey)
+            } catch {
+                self.configurationError = error.localizedDescription
+                return
+            }
             UserDefaults.standard.set(serverURL, forKey: "serverURL")
-            UserDefaults.standard.set(apiKey, forKey: "apiKey")
-            self.receivedConfig = true
+            UserDefaults.standard.removeObject(forKey: "apiKey")
+            self.configurationError = nil
+            self.receivedConfig = !serverURL.isEmpty && !apiKey.isEmpty
+            self.configurationRevision += 1
         }
     }
 

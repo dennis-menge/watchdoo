@@ -4,7 +4,7 @@ import SwiftUI
 struct SetupView: View {
     @EnvironmentObject var connectivity: PhoneConnectivityManager
     @AppStorage("serverURL") private var serverURL = ""
-    @AppStorage("apiKey") private var apiKey = ""
+    @State private var apiKey = ""
     @State private var isTestingConnection = false
     @State private var connectionResult: ConnectionResult?
 
@@ -80,7 +80,13 @@ struct SetupView: View {
 
                 Section("An Watch senden") {
                     Button {
-                        connectivity.sendConfig(serverURL: serverURL, apiKey: apiKey)
+                        do {
+                            try APIKeyStore.save(apiKey)
+                            UserDefaults.standard.removeObject(forKey: "apiKey")
+                            connectivity.sendConfig(serverURL: serverURL, apiKey: apiKey)
+                        } catch {
+                            connectionResult = .failure(error.localizedDescription)
+                        }
                     } label: {
                         HStack {
                             Image(systemName: "applewatch.radiowaves.left.and.right")
@@ -113,6 +119,13 @@ struct SetupView: View {
                 }
             }
             .navigationTitle("⚙️ Setup")
+            .task {
+                do {
+                    apiKey = try APIKeyStore.migrate() ?? ""
+                } catch {
+                    connectionResult = .failure(error.localizedDescription)
+                }
+            }
         }
     }
 
@@ -161,6 +174,8 @@ struct SetupView: View {
         request.timeoutInterval = 45
 
         do {
+            try APIKeyStore.save(cleanKey)
+            UserDefaults.standard.removeObject(forKey: "apiKey")
             let (data, response) = try await URLSession.shared.data(for: request)
             guard let httpResponse = response as? HTTPURLResponse else {
                 connectionResult = .failure("Keine HTTP-Antwort vom Server.")

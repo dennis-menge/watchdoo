@@ -21,7 +21,7 @@ actor APIService: ShoppingListAPI {
     }
 
     private var apiKey: String {
-        UserDefaults.standard.string(forKey: "apiKey") ?? ""
+        (try? APIKeyStore.load()) ?? ""
     }
 
     var isConfigured: Bool {

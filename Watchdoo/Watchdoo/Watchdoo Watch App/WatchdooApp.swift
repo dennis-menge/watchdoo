@@ -17,17 +17,18 @@ struct ContentView: View {
     @EnvironmentObject var connectivityManager: WatchConnectivityManager
     @StateObject private var viewModel = ShoppingListViewModel()
     @AppStorage("serverURL") private var serverURL = ""
-    @AppStorage("apiKey") private var apiKey = ""
     @Environment(\.scenePhase) private var scenePhase
 
     private var isConfigured: Bool {
-        !serverURL.isEmpty && !apiKey.isEmpty
+        !serverURL.isEmpty && !((try? APIKeyStore.load()) ?? "").isEmpty
     }
 
     var body: some View {
         NavigationStack {
             Group {
-                if !isConfigured && !connectivityManager.receivedConfig {
+                if let error = connectivityManager.configurationError {
+                    Text(error).font(.caption).padding()
+                } else if !isConfigured {
                     SetupPromptView()
                 } else {
                     ShoppingListView(viewModel: viewModel)
@@ -41,7 +42,7 @@ struct ContentView: View {
                     }
                 }
             }
-            .onChange(of: apiKey) {
+            .onChange(of: connectivityManager.configurationRevision) {
                 Task {
                     await viewModel.resetForConfigurationChange()
                     if isConfigured {

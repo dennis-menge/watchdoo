@@ -9,11 +9,21 @@ from tests.conftest import AUTH_HEADER
 @pytest.mark.anyio
 async def test_health_check(client):
     """Health endpoint should work without auth."""
-    response = await client.get("/api/v1/health")
+    with patch("app.main.cookidoo_service.login", new_callable=AsyncMock):
+        response = await client.get("/api/v1/health")
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "ok"
-    assert "cookidoo_connected" in data
+    assert data["cookidoo_connected"] is True
+
+
+@pytest.mark.anyio
+async def test_health_reports_upstream_failure_without_real_login(client):
+    with patch("app.main.cookidoo_service.login", new_callable=AsyncMock,
+               side_effect=RuntimeError("upstream unavailable")):
+        response = await client.get("/api/v1/health")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok", "cookidoo_connected": False}
 
 
 @pytest.mark.anyio
